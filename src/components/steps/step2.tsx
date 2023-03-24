@@ -13,6 +13,7 @@ function Step1() {
           onDrop={() => {
             console.log();
           }}
+          acceptFiles=".pem"
         />
       </Box>
     </Box>

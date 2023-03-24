@@ -1,6 +1,10 @@
 import { Box, Checkbox, Input, Text } from "@chakra-ui/react";
+import { useState } from "react";
 
 function Step3() {
+  const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
+    useState(false);
+
   return (
     <Box>
       <Text color="White" fontSize="20px" fontWeight="400">
@@ -18,8 +22,22 @@ function Step3() {
         </Text>
         <Input type="text" />
 
-        <Checkbox margin="1rem 0" color="White">
-          Output address
+        <Text color="white" margin="1rem 0">
+          Non Custodial Address
+        </Text>
+        <Input
+          type="text"
+          disabled={!isEnableCustodialAddress}
+          placeholder="888260190301f98da2ce1eed5c08c0699be1142f"
+        />
+        <Checkbox
+          color="white"
+          margin="1rem 0"
+          onChange={() =>
+            setIsEnableCustodialAddress(!isEnableCustodialAddress)
+          }
+        >
+          Change Output Address
         </Checkbox>
       </Box>
     </Box>

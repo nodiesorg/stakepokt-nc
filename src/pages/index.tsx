@@ -15,7 +15,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Step1 from "@/components/steps/step1";
 import Step2 from "@/components/steps/step2";
 import Step3 from "@/components/steps/step3";
-import Step4 from "@/components/steps/step4";
+import StakeTable from "@/components/stake-table/StakeTable";
 
 // Content for each step
 const steps = [
@@ -31,14 +31,10 @@ const steps = [
     label: "",
     content: <Step3 />,
   },
-  {
-    label: "",
-    content: <Step4 />,
-  },
 ];
 
 export default function Home() {
-  const { nextStep, prevStep, reset, activeStep } = useSteps({
+  const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
 
@@ -58,7 +54,7 @@ export default function Home() {
               <CardBody>
                 <CardHeader>
                   <Heading
-                    color="White"
+                    color="white"
                     fontFamily="Poppins"
                     fontSize="24px"
                     fontWeight={500}
@@ -68,50 +64,48 @@ export default function Home() {
                   </Heading>
                 </CardHeader>
 
-                {/* Multistep */}
-                <Steps
-                  activeStep={activeStep}
-                  orientation="horizontal"
-                  margin="3rem 0"
-                >
-                  {steps.map(({ label, content }, index) => (
-                    <Step label={label} key={index}>
-                      {content}
-                    </Step>
-                  ))}
-                </Steps>
+                {activeStep !== 3 ? (
+                  <>
+                    {/* Multistep */}
+                    <Steps
+                      activeStep={activeStep}
+                      orientation="horizontal"
+                      margin="3rem 0"
+                    >
+                      {steps.map(({ label, content }, index) => (
+                        <Step label={label} key={index}>
+                          {content}
+                        </Step>
+                      ))}
+                    </Steps>
 
-                {/* Next and Back buttons */}
-                {activeStep === steps.length ? (
-                  <Flex padding={4} justifyContent="center">
-                    <Heading color="white" fontSize="xl">
-                      All steps completed! 🎉
-                    </Heading>
-                  </Flex>
+                    {/* Next and Back buttons */}
+                    <Flex width="100%" justify="flex-end">
+                      <Button
+                        border="1px solid white"
+                        color="white"
+                        isDisabled={activeStep === 0}
+                        leftIcon={<ArrowBackIcon />}
+                        marginRight={4}
+                        onClick={prevStep}
+                        size="lg"
+                        variant="outline"
+                        _hover={{ backgroundColor: "transparent" }}
+                      >
+                        Back
+                      </Button>
+                      <Button
+                        backgroundColor="#5C58FF"
+                        onClick={nextStep}
+                        size="lg"
+                        _hover={{ backgroundColor: "#5C58FF" }}
+                      >
+                        {activeStep === 2 ? "Start staking!" : "Next"}
+                      </Button>
+                    </Flex>
+                  </>
                 ) : (
-                  <Flex width="100%" justify="flex-end">
-                    <Button
-                      border="1px solid white"
-                      color="white"
-                      isDisabled={activeStep === 0}
-                      leftIcon={<ArrowBackIcon />}
-                      marginRight={4}
-                      onClick={prevStep}
-                      size="lg"
-                      variant="outline"
-                      _hover={{ backgroundColor: "transparent" }}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      backgroundColor="#5C58FF"
-                      onClick={nextStep}
-                      size="lg"
-                      _hover={{ backgroundColor: "#5C58FF" }}
-                    >
-                      {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                    </Button>
-                  </Flex>
+                  <StakeTable />
                 )}
               </CardBody>
             </Card>

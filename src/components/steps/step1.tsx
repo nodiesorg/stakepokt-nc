@@ -14,7 +14,7 @@ function Step1() {
         </Text>
         <Input type="text" />
 
-        <NodiesDropzone onDrop={() => console.log} />
+        <NodiesDropzone onDrop={() => console.log} acceptFiles=".pem" />
       </Box>
     </Box>
   );
