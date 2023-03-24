@@ -3,10 +3,18 @@ import { Box, Text } from "@chakra-ui/react";
 
 type NodiesDropzoneProps = {
   onDrop: (acceptedFiles: any) => void;
+  acceptFiles: "ppk" | "csv" | "txt";
 };
 
-const NodiesDropzone = ({ onDrop }: NodiesDropzoneProps) => {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+const NodiesDropzone = ({ onDrop, acceptFiles }: NodiesDropzoneProps) => {
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept:
+      acceptFiles === "ppk"
+        ? { "application/x-putty-private-key": [".ppk"] }
+        : { "text/plain": [".csv", ".txt"] },
+  });
 
   return (
     <>
