@@ -10,7 +10,32 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-function StakeTable() {
+type StakeTableProps = {
+  passphrase: string;
+  keyfile: any; // Apply proper typing
+  csv: any; // Apply proper typing
+  stakeAmount: string;
+  nodeBalance: string;
+  custodialAddress: string;
+};
+
+function StakeTable({
+  passphrase,
+  keyfile,
+  csv,
+  stakeAmount,
+  nodeBalance,
+  custodialAddress,
+}: StakeTableProps) {
+  console.log({
+    passphrase,
+    keyfile,
+    csv,
+    stakeAmount,
+    nodeBalance,
+    custodialAddress,
+  });
+
   return (
     <Box>
       <Text color="white" fontSize="20px" fontWeight="400" textAlign="center">
