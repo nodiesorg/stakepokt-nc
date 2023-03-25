@@ -53,6 +53,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
                 {`Upload the node file to stake. This is generally provided by Node Operator`}
+                
             </Text>
             <Text color="White" fontSize="20px" fontWeight="400">
                 {`format: nodeAlias,pubkey,address.csv`}

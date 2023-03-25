@@ -12,14 +12,24 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
     const [wallet, setWallet] = useState<KeyManager | undefined>(undefined)
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
     const [passphrase, setPassphrase] = useState('')
-    const [keyFile, setKeyFile] = useState<File | undefined>(undefined)
+    const [keyString, setKeyString] = useState<string>('')
     const handlePassphraseInput = (event: ChangeEvent<HTMLInputElement>) => {
         setPassphrase(event.target.value)
     }
 
+    const validateDecryptKeyFile = async () => {
+        try {
+            const importedWallet = await KeyManager.fromPPK({password: passphrase, ppk: keyString})
+            setWallet(importedWallet)
+            onNextStep() // go to next step
+        } catch (e) {
+            console.log("Failed to retrieve wallet, likely malformed keyfile or wrong passphrase.")
+        }
+    }
+
     useEffect(() => {
-        setNextStepEnabled(passphrase != undefined && passphrase.length > 0 && keyFile != undefined)
-    }, [passphrase, keyFile])
+        setNextStepEnabled(passphrase.length > 0 && keyString.length > 0);
+    }, [passphrase, keyString])
 
     const [filePrompt, setUploadFilePrompt] = useState('Click here or drag and drop your keyfile json.')
     const onKeyFileAdded = (e: File[]) => {
@@ -29,14 +39,8 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = async () => {
             setUploadFilePrompt(`Selected file: ${keyFile.name}`)
-            setKeyFile(e[0])
-            // const ppkString = reader.result as string
-            // try {
-            //     const importedWallet = await KeyManager.fromPPK({password: passphrase, ppk: ppkString})
-            //     setWallet(importedWallet)
-            // } catch (e) {
-            //     console.log("Failed to retrieve wallet, likely malformed keyfile or wrong passphrase.")
-            // }
+            setKeyString(reader.result as string)
+
         }
         reader.readAsText(keyFile);
     }
@@ -57,7 +61,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
             <Flex width="100%" justify="flex-end">
                 <Button
                     backgroundColor="#5C58FF"
-                    onClick={onNextStep}
+                    onClick={validateDecryptKeyFile}
                     isDisabled={!nextStepEnabled}
                     size="lg"
                     _hover={{backgroundColor: "#5C58FF"}}
