@@ -19,39 +19,47 @@ import ImportNodeKeysStep from "@/components/stake-steps/import-node-keys-step";
 import SetStakeAmountStep from "@/components/stake-steps/set-stake-amount-step";
 import StakeTable from "@/components/stake-table/stake-table";
 
-// Content for each step
-const steps = [
-  {
-    headerTitle: "Non Custodial Staking Tool",
-    content: <ImportNcWalletStep />,
-  },
-  {
-    headerTitle: "Import Node Keys",
-    content: <ImportNodeKeysStep />,
-  },
-  {
-    headerTitle: "Set Stake Distribution",
-    content: <SetStakeAmountStep />,
-  },
-];
-
 export default function Home() {
   const { nextStep, prevStep, activeStep } = useSteps({
     initialStep: 0,
   });
 
-  // passphrase
   const [passphrase, setPassphrase] = useState("");
-  // keyfile
   const [keyfile, setKeyFile] = useState<null | any>();
-  // csv
   const [csv, setCsv] = useState<null | any>();
-  // stakeamount
   const [stakeAmount, setStakeAmount] = useState("");
-  // node balance
   const [nodeBalance, setNodeBalance] = useState("");
-  // non custodial address
   const [custodialAddress, setNonCustodialAddress] = useState("");
+
+  // Content for each step
+  const steps = [
+    {
+      headerTitle: "Non Custodial Staking Tool",
+      content: (
+        <ImportNcWalletStep
+          passphrase={passphrase}
+          setPassphrase={setPassphrase}
+        />
+      ),
+    },
+    {
+      headerTitle: "Import Node Keys",
+      content: <ImportNodeKeysStep setCsv={setCsv} />,
+    },
+    {
+      headerTitle: "Set Stake Distribution",
+      content: (
+        <SetStakeAmountStep
+          stakeAmount={stakeAmount}
+          setStakeAmount={setStakeAmount}
+          nodeBalance={nodeBalance}
+          setNodeBalance={setNodeBalance}
+          custodialAddress={custodialAddress}
+          setNonCustodialAddress={setNonCustodialAddress}
+        />
+      ),
+    },
+  ];
 
   return (
     <>
@@ -63,7 +71,10 @@ export default function Home() {
 
       <Box as="main" minHeight="100vh">
         <Flex alignItems="center" minHeight="100vh">
-          <Container maxWidth="3xl" height="100%">
+          <Container
+            maxWidth={activeStep !== steps.length ? "3xl" : "full"}
+            height="100%"
+          >
             {/* Multistep card */}
             <Card backgroundColor="#1B1E30">
               <CardBody>
@@ -75,7 +86,7 @@ export default function Home() {
                     fontWeight={500}
                     textAlign="center"
                   >
-                    {steps[activeStep].headerTitle}
+                    {steps[activeStep]?.headerTitle}
                   </Heading>
                 </CardHeader>
 

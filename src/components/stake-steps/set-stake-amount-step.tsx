@@ -1,7 +1,23 @@
 import { Box, Checkbox, Input, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
-function SetStakeAmountStep() {
+type SetStakeAmountStepsProps = {
+  stakeAmount: string;
+  setStakeAmount: React.Dispatch<React.SetStateAction<string>>;
+  nodeBalance: string;
+  setNodeBalance: React.Dispatch<React.SetStateAction<string>>;
+  custodialAddress: string;
+  setNonCustodialAddress: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function SetStakeAmountStep({
+  stakeAmount,
+  setStakeAmount,
+  nodeBalance,
+  setNodeBalance,
+  custodialAddress,
+  setNonCustodialAddress,
+}: SetStakeAmountStepsProps) {
   const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
     useState(false);
 
