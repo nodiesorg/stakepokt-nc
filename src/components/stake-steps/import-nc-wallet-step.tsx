@@ -13,6 +13,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
     const [passphrase, setPassphrase] = useState('')
     const [keyString, setKeyString] = useState<string>('')
+    const [filePrompt, setUploadFilePrompt] = useState('Click here or drag and drop your keyfile json.')
     const handlePassphraseInput = (event: ChangeEvent<HTMLInputElement>) => {
         setPassphrase(event.target.value)
     }
@@ -23,7 +24,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
             setWallet(importedWallet)
             onNextStep() // go to next step
         } catch (e) {
-            console.log("Failed to retrieve wallet, likely malformed keyfile or wrong passphrase.")
+            setUploadFilePrompt(`${filePrompt}, PPK malformed or passphrase invalid.`)
         }
     }
 
@@ -31,7 +32,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
         setNextStepEnabled(passphrase.length > 0 && keyString.length > 0);
     }, [passphrase, keyString])
 
-    const [filePrompt, setUploadFilePrompt] = useState('Click here or drag and drop your keyfile json.')
+
     const onKeyFileAdded = (e: File[]) => {
         const keyFile = e[0];
         const reader = new FileReader()
@@ -40,7 +41,6 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
         reader.onload = async () => {
             setUploadFilePrompt(`Selected file: ${keyFile.name}`)
             setKeyString(reader.result as string)
-
         }
         reader.readAsText(keyFile);
     }
