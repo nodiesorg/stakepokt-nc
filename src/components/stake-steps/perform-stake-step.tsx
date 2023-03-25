@@ -18,7 +18,17 @@ function PerformStakeStep() {
     <Box>
       <Box margin="2rem 0">
         <TableContainer>
-          <Table variant="simple">
+          <Table
+              sx={{
+                tableLayout: "fixed",
+                whiteSpace: "normal",
+                td: {
+                  wordWrap: "break-word",
+                  wordBreak: "break-all",
+                },
+              }}
+              variant="simple"
+          >
             <Thead>
               <Tr>
                 <Th>Node Address</Th>
