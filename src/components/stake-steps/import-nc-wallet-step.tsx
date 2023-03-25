@@ -36,8 +36,8 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
     const onKeyFileAdded = (e: File[]) => {
         const keyFile = e[0];
         const reader = new FileReader()
-        reader.onabort = () => console.log('file reading was aborted')
-        reader.onerror = () => console.log('file reading has failed')
+        reader.onabort = () => setUploadFilePrompt('json read aborted, try again')
+        reader.onerror = () => setUploadFilePrompt('json read error, try again')
         reader.onload = async () => {
             setUploadFilePrompt(`Selected file: ${keyFile.name}`)
             setKeyString(reader.result as string)

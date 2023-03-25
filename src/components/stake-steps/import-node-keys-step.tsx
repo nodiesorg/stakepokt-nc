@@ -14,11 +14,11 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
 
     const [filePrompt, setUploadFilePrompt] = useState('Click here or drag and drop your node csv.')
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
-    const onKeyFileAdded = (e: File[]) => {
+    const onImportedNodesAdded = (e: File[]) => {
         const keyFile = e[0];
         const reader = new FileReader()
-        reader.onabort = () => console.log('file reading was aborted')
-        reader.onerror = () => console.log('file reading has failed')
+        reader.onabort = () => setUploadFilePrompt('csv read aborted, try again')
+        reader.onerror = () => setUploadFilePrompt('csv read error, try again')
         reader.onload = () => {
             const result = reader.result as string
             const csvResult = CSV.parse(result);
@@ -53,7 +53,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
                 {`Upload the node file to stake. This is generally provided by Node Operator`}
-                
+
             </Text>
             <Text color="White" fontSize="20px" fontWeight="400">
                 {`format: nodeAlias,pubkey,address.csv`}
@@ -62,7 +62,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
             <Box margin="2rem 0">
                 <NDDropzone
                     prompt={filePrompt}
-                    onDrop={onKeyFileAdded}
+                    onDrop={onImportedNodesAdded}
                     acceptedFileType="csv"
                 />
             </Box>
