@@ -10,21 +10,20 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-function StakeTable() {
+
+// TODO: Make this scalable with json object
+
+function PerformStakeStep() {
   return (
     <Box>
-      <Text color="white" fontSize="20px" fontWeight="400" textAlign="center">
-        Staking progress
-      </Text>
-
       <Box margin="2rem 0">
         <TableContainer>
           <Table variant="simple">
             <Thead>
               <Tr>
-                <Th>Address</Th>
-                <Th>Staked tx sent</Th>
-                <Th>Balance tx sent</Th>
+                <Th>Node Address</Th>
+                <Th>Stake TX Hash</Th>
+                <Th>Balance Transfer TX Hash</Th>
               </Tr>
             </Thead>
             <Tbody color="white">
@@ -45,4 +44,4 @@ function StakeTable() {
   );
 }
 
-export default StakeTable;
+export default PerformStakeStep;

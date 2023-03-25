@@ -1,5 +1,5 @@
 import {Box, Button, Checkbox, Flex, Input, Text} from "@chakra-ui/react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
 
@@ -9,6 +9,12 @@ function SetStakeAmountStep({onPrevStep, onNextStep}: SetStakeAmountStepProps) {
     const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
         useState(false);
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
+
+    useEffect(() => {
+        // TODO: Add validation for inputs
+        setNextStepEnabled(true);
+    }, [])
+
     return (
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">

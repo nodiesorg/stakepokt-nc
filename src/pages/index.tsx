@@ -13,7 +13,7 @@ import {Step, Steps, useSteps} from "chakra-ui-steps";
 import ImportNcWalletStep from "@/components/stake-steps/import-nc-wallet-step";
 import ImportNodeKeysStep from "@/components/stake-steps/import-node-keys-step";
 import SetStakeAmountStep from "@/components/stake-steps/set-stake-amount-step";
-import StakeTable from "@/components/stake-table/StakeTable";
+import PerformStakeStep from "@/components/stake-steps/perform-stake-step";
 import { useState} from "react";
 import {DefaultStakeForm, StakeForm} from "@/components/stake-steps/stake-form";
 
@@ -85,7 +85,7 @@ export default function Home() {
                                         <SetStakeAmountStep onNextStep={nextStep} onPrevStep={prevStep}/>
                                     </Step>
                                     <Step label={""} key={3}>
-                                        <StakeTable/>
+                                        <PerformStakeStep/>
                                     </Step>
                                 </Steps>
                                 )
