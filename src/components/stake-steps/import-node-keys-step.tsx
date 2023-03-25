@@ -12,8 +12,15 @@ export type ImportNodeKeysStepProps = {} & BidirectionalStepProps;
 
 function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
 
+
     const [filePrompt, setUploadFilePrompt] = useState('Click here or drag and drop your node csv.')
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
+    const [importedAccounts, setImportedAccounts] = useState<ImportedNcNode[]>([])
+
+    const finishStep = () => {
+        onNextStep({nodesToStake: importedAccounts})
+    }
+
     const onImportedNodesAdded = (e: File[]) => {
         const keyFile = e[0];
         const reader = new FileReader()
@@ -23,27 +30,29 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
             const result = reader.result as string
             const csvResult = CSV.parse(result);
 
-            const importedAccounts: ImportedNcNode[] = []
-
-            for (const [i, c] of csvResult.entries()) {
-                if (i == 0)
-                    continue
-                if (c.length < 3)
-                    continue;
+            // @ts-ignore
+            const parsedAccounts: ImportedNcNode[] = csvResult.map((c, i) => {
+                if (i == 0) // skip first csv line
+                    return undefined;
+                if (c.length < 3) // csv format needs at least 3 headers (nodeAlias,pubKey,address)
+                    return undefined;
                 const nodeAlias = c[0].trim();
                 const publicKey = c[1].trim();
                 const address = c[2].trim();
                 if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 20) // TODO add validation error
-                    continue;
-                importedAccounts.push({
+                    return undefined;
+                return {
                     nodeAlias,
                     publicKey,
                     address,
-                })
-            }
+                }
+            }).filter(s => s != undefined)
+
             setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${importedAccounts.length}`)
-            if (importedAccounts.length > 0)
+            if (importedAccounts.length > 0) {
                 setNextStepEnabled(true);
+                setImportedAccounts(parsedAccounts);
+            }
         }
         // Read File
         reader.readAsText(keyFile);
@@ -81,7 +90,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
                 </Button>
                 <Button
                     backgroundColor="#5C58FF"
-                    onClick={onNextStep}
+                    onClick={finishStep}
                     isDisabled={!nextStepEnabled}
                     size="lg"
                     _hover={{backgroundColor: "#5C58FF"}}

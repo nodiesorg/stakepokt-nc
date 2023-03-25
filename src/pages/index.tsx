@@ -34,13 +34,24 @@ const stepMetadata = [
 
 export default function Home() {
 
-    const {nextStep, prevStep, activeStep} = useSteps({
+    const {nextStep: goToNextStep, prevStep: goToPrevStep, activeStep} = useSteps({
         initialStep: 0,
     });
+
 
     const [stakeForm, setStakeForm] = useState<StakeForm>({
         ...DefaultStakeForm,
     })
+
+    const onStepCompleted = (updatedForm: StakeForm) => {
+        setStakeForm((prevState) => {
+            return {
+                ...updatedForm,
+                prevState,
+            }
+        })
+        goToNextStep();
+    }
 
     return (
         <>
@@ -73,13 +84,13 @@ export default function Home() {
                                     margin="3rem 0"
                                 >
                                     <Step label={""} key={0}>
-                                        <ImportNcWalletStep onNextStep={nextStep}/>
+                                        <ImportNcWalletStep onNextStep={onStepCompleted}/>
                                     </Step>
                                     <Step label={""} key={1}>
-                                        <ImportNodeKeysStep onNextStep={nextStep} onPrevStep={prevStep}/>
+                                        <ImportNodeKeysStep onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={2}>
-                                        <SetStakeAmountStep onNextStep={nextStep} onPrevStep={prevStep}/>
+                                        <SetStakeAmountStep onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={3}>
                                         <PerformStakeStep/>

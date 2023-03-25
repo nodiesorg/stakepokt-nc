@@ -9,7 +9,6 @@ export type ImportNcWalletStepProps = {} & ForwardStepProps;
 
 function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
 
-    const [wallet, setWallet] = useState<KeyManager | undefined>(undefined)
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
     const [passphrase, setPassphrase] = useState('')
     const [keyString, setKeyString] = useState<string>('')
@@ -18,11 +17,12 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
         setPassphrase(event.target.value)
     }
 
-    const validateDecryptKeyFile = async () => {
+    const finishStep = async () => {
         try {
             const importedWallet = await KeyManager.fromPPK({password: passphrase, ppk: keyString})
-            setWallet(importedWallet)
-            onNextStep() // go to next step
+            onNextStep({
+                wallet: importedWallet,
+            })
         } catch (e) {
             setUploadFilePrompt(`${filePrompt}, PPK malformed or passphrase invalid.`)
         }
@@ -61,7 +61,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
             <Flex width="100%" justify="flex-end">
                 <Button
                     backgroundColor="#5C58FF"
-                    onClick={validateDecryptKeyFile}
+                    onClick={finishStep}
                     isDisabled={!nextStepEnabled}
                     size="lg"
                     _hover={{backgroundColor: "#5C58FF"}}

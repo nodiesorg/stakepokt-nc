@@ -2,6 +2,7 @@ import {Box, Button, Checkbox, Flex, Input, Text} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
+import {KeyManager} from "@pokt-foundation/pocketjs-signer";
 
 export type SetStakeAmountStepProps = {} & BidirectionalStepProps;
 
@@ -14,6 +15,10 @@ function SetStakeAmountStep({onPrevStep, onNextStep}: SetStakeAmountStepProps) {
         // TODO: Add validation for inputs
         setNextStepEnabled(true);
     }, [])
+
+    const finishStep = () => {
+        onNextStep({})
+    }
 
     return (
         <Box>
@@ -65,7 +70,7 @@ function SetStakeAmountStep({onPrevStep, onNextStep}: SetStakeAmountStepProps) {
                 </Button>
                 <Button
                     backgroundColor="#5C58FF"
-                    onClick={onNextStep}
+                    onClick={finishStep}
                     isDisabled={!nextStepEnabled}
                     size="lg"
                     _hover={{backgroundColor: "#5C58FF"}}
