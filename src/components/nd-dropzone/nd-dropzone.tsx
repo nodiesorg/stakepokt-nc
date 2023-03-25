@@ -1,19 +1,32 @@
-import { useDropzone } from "react-dropzone";
+import {Accept, useDropzone} from "react-dropzone";
 import { Box, Text } from "@chakra-ui/react";
+
+type DropdownFileTypes = "ppk" | "csv" | "txt" | "json";
 
 type NodiesDropzoneProps = {
   onDrop: (acceptedFiles: any) => void;
-  acceptFiles: "ppk" | "csv" | "txt";
+  prompt: string;
+  acceptedFileType: DropdownFileTypes
 };
 
-const NodiesDropzone = ({ onDrop, acceptFiles }: NodiesDropzoneProps) => {
+function transformDropzoneAcceptType(fileType: DropdownFileTypes): Accept {
+  switch (fileType) {
+    case "ppk":
+    case "txt":
+    case "csv":
+      return {'text/csv': [`.${fileType}`]}
+    default:
+      return {'application/json': [`.${fileType}`]}
+  }
+}
+
+const NDDropzone = ({ onDrop, acceptedFileType, prompt }: NodiesDropzoneProps) => {
+
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: false,
-    accept:
-      acceptFiles === "ppk"
-        ? { "application/x-putty-private-key": [".ppk"] }
-        : { "text/plain": [".csv", ".txt"] },
+    accept: transformDropzoneAcceptType(acceptedFileType),
   });
 
   return (
@@ -34,11 +47,11 @@ const NodiesDropzone = ({ onDrop, acceptFiles }: NodiesDropzoneProps) => {
         <input {...getInputProps()} />
 
         <Text fontSize="16px" color="Blue1" fontWeight="500">
-          Add file or drop files here
+          {`${prompt}`}
         </Text>
       </Box>
     </>
   );
 };
 
-export default NodiesDropzone;
+export default NDDropzone;
