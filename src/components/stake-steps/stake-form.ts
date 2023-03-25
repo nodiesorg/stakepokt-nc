@@ -1,6 +1,5 @@
-import {createContext} from "react";
 import {Account} from "@pokt-foundation/pocketjs-types";
-import {ImportedNCNode} from "@/internal/pokt-types/ImportedNCNode";
+import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
 
 
 export type StakeForm = {
@@ -8,7 +7,7 @@ export type StakeForm = {
     stakeAmount: string;
     transferAmount: string;
     outputAddress: string;
-    nodesToStake: ImportedNCNode[]
+    nodesToStake: ImportedNcNode[]
 }
 
 export const DefaultStakeForm: StakeForm = {

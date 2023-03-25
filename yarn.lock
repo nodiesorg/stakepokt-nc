@@ -1988,6 +1988,11 @@ csstype@^3.0.11, csstype@^3.0.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
 
+csv-string@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/csv-string/-/csv-string-4.1.1.tgz#3ab81c702e15adb3396a9f98c3a703b77a0391cc"
+  integrity sha512-KGvaJEZEdh2O/EVvczwbPLqJZtSQaWQ4cEJbiOJEG4ALq+dBBqNmBkRXTF4NV79V25+XYtiqbco1IWrmHLm5FQ==
+
 damerau-levenshtein@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/damerau-levenshtein/-/damerau-levenshtein-1.0.8.tgz#b43d286ccbd36bc5b2f7ed41caf2d0aba1f8a6e7"

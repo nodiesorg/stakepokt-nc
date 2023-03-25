@@ -23,6 +23,7 @@
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
     "chakra-ui-steps": "^2.0.4",
+    "csv-string": "^4.1.1",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
     "framer-motion": "^10.8.5",

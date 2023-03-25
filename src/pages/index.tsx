@@ -38,12 +38,9 @@ export default function Home() {
         initialStep: 0,
     });
 
-
     const [stakeForm, setStakeForm] = useState<StakeForm>({
         ...DefaultStakeForm,
     })
-
-    const finishedWithSteps = activeStep == stepMetadata.length
 
     return (
         <>

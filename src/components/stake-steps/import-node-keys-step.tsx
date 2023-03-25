@@ -2,7 +2,11 @@ import {Box, Button, Flex, Text} from "@chakra-ui/react";
 import NDDropzone from "../nd-dropzone/nd-dropzone";
 import {useState} from "react";
 import {ArrowBackIcon} from "@chakra-ui/icons";
+import * as CSV from 'csv-string';
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
+import {KeyManager} from "@pokt-foundation/pocketjs-signer";
+import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
+import {add} from "@noble/hashes/_u64";
 
 export type ImportNodeKeysStepProps = {} & BidirectionalStepProps;
 
@@ -16,16 +20,42 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
         reader.onabort = () => console.log('file reading was aborted')
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = () => {
-            setUploadFilePrompt(`Selected file: ${keyFile.name}`)
-            setNextStepEnabled(true);
+            const result = reader.result as string
+            const csvResult = CSV.parse(result);
+
+            const importedAccounts: ImportedNcNode[] = []
+
+            for (const [i, c] of csvResult.entries()) {
+                if (i == 0)
+                    continue
+                if (c.length < 3)
+                    continue;
+                const nodeAlias = c[0].trim();
+                const publicKey = c[1].trim();
+                const address = c[2].trim();
+                if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 20) // TODO add validation error
+                    continue;
+                importedAccounts.push({
+                    nodeAlias,
+                    publicKey,
+                    address,
+                })
+            }
+            setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${importedAccounts.length}`)
+            if (importedAccounts.length > 0)
+                setNextStepEnabled(true);
         }
+        // Read File
         reader.readAsText(keyFile);
     }
 
     return (
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
-                {`Upload file of your "public keys" (provided by node provider)`}
+                {`Upload the node file to stake. This is generally provided by Node Operator`}
+            </Text>
+            <Text color="White" fontSize="20px" fontWeight="400">
+                {`format: nodeAlias,pubkey,address.csv`}
             </Text>
 
             <Box margin="2rem 0">
