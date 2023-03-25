@@ -20,6 +20,54 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
     const finishStep = () => {
         onNextStep({nodesToStake: importedAccounts})
     }
+    const parseCsv = (keyFile: File, csvResult: string[][]) => {
+
+        // @ts-ignore
+        const parsedAccounts: (ImportedNcNode|undefined)[] = csvResult.map((c, i) => {
+            if (i == 0) // skip first csv line
+                return undefined;
+            if (c.length < 3) // csv format needs at least 3 headers (nodeAlias,pubKey,address)
+                return undefined;
+            const nodeAlias = c[0].trim();
+            const publicKey = c[1].trim();
+            const address = c[2].trim();
+            if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 20)
+                return undefined;
+
+            let domain: string | undefined;
+            let chains: string[] | undefined;
+
+            if (c.length == 4) {
+                domain = c[4].trim()
+            }
+
+            if (c.length == 5) {
+                chains = c[5].split(",").map(s => s.trim())
+                if(chains.length == 0)
+                    return undefined;
+            }
+
+            return {
+                nodeAlias,
+                publicKey,
+                address,
+                domain,
+                chains
+            }
+        })
+
+        if(parsedAccounts.find((s) => s == undefined)) {
+            setUploadFilePrompt('Failed to parse CSV')
+            return;
+        }
+
+        setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${importedAccounts.length}`)
+        if (importedAccounts.length > 0) {
+            setNextStepEnabled(true);
+            // @ts-ignore
+            setImportedAccounts(parsedAccounts.filter(s => s !== undefined));
+        }
+    }
 
     const onImportedNodesAdded = (e: File[]) => {
         const keyFile = e[0];
@@ -29,30 +77,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
         reader.onload = () => {
             const result = reader.result as string
             const csvResult = CSV.parse(result);
-
-            // @ts-ignore
-            const parsedAccounts: ImportedNcNode[] = csvResult.map((c, i) => {
-                if (i == 0) // skip first csv line
-                    return undefined;
-                if (c.length < 3) // csv format needs at least 3 headers (nodeAlias,pubKey,address)
-                    return undefined;
-                const nodeAlias = c[0].trim();
-                const publicKey = c[1].trim();
-                const address = c[2].trim();
-                if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 20) // TODO add validation error
-                    return undefined;
-                return {
-                    nodeAlias,
-                    publicKey,
-                    address,
-                }
-            }).filter(s => s != undefined)
-
-            setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${importedAccounts.length}`)
-            if (importedAccounts.length > 0) {
-                setNextStepEnabled(true);
-                setImportedAccounts(parsedAccounts);
-            }
+            parseCsv(keyFile, csvResult);
         }
         // Read File
         reader.readAsText(keyFile);
