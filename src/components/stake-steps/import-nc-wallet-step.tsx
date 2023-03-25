@@ -1,5 +1,5 @@
 import {Box, Input, Text} from "@chakra-ui/react";
-import NDDropzone from "../nd-dropzone/n-d-dropzone";
+import NDDropzone from "../nd-dropzone/nd-dropzone";
 import {useState} from "react";
 
 
