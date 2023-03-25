@@ -27,7 +27,7 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-// Custom chakra-ui-steps style
+// Custom chakra-ui-stake-steps style
 const CustomStepsStyles = {
   ...StepsTheme,
   baseStyle: (props: StyleFunctionProps) => {

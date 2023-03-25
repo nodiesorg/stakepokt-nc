@@ -1,7 +1,7 @@
 import { Box, Checkbox, Input, Text } from "@chakra-ui/react";
 import { useState } from "react";
 
-function Step3() {
+function SetStakeAmountStep() {
   const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
     useState(false);
 
@@ -44,4 +44,4 @@ function Step3() {
   );
 }
 
-export default Step3;
+export default SetStakeAmountStep;
