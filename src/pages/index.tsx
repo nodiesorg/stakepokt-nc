@@ -22,17 +22,17 @@ const steps = [
     {
         label: "",
         headerTitle: "Non Custodial Staking Tool",
-        content: <ImportNcWalletStep/>,
+        content: ImportNcWalletStep,
     },
     {
         label: "",
         headerTitle: "Import Node Keys",
-        content: <ImportNodeKeysStep/>,
+        content: ImportNodeKeysStep,
     },
     {
         label: "",
         headerTitle: "Set Stake Distribution",
-        content: <SetStakeAmountStep/>,
+        content: SetStakeAmountStep,
     },
 ];
 
@@ -86,7 +86,7 @@ export default function Home() {
                                         >
                                             {steps.map(({label, content}, index) => (
                                                 <Step label={label} key={index}>
-                                                    {content}
+                                                    {content()}
                                                 </Step>
                                             ))}
                                         </Steps>
