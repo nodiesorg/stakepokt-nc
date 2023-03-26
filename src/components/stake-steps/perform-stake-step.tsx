@@ -70,8 +70,14 @@ function StakeResult({nodeAliasTxMap}: StakeResultProps) {
     )
 }
 
+async function stubSubmit ({txMsg: TxMsg}: any) {
+    return {
+        logs: "123",
+    } as TransactionResponse
+}
+
 function submitTxNodePair(node: ImportedNcNode, tb: TransactionBuilder, txMsgs: TxMsgDetailed[]) {
-    const pairTxSubmit = txMsgs.map((tx) => tb.submit({txMsg: tx.txMsg}).then((r: TransactionResponse) => ({
+    const pairTxSubmit = txMsgs.map((tx) => stubSubmit({txMsg: tx.txMsg}).then((r: TransactionResponse) => ({
         node: node,
         type: tx.type,
         result: r
