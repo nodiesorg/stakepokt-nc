@@ -8,6 +8,7 @@ import {PoktProvider} from "@/internal/pokt-rpc/provider";
 export type SetStakeAmountStepProps = { wallet: KeyManager | undefined } & BidirectionalStepProps;
 
 export type WalletRetrieveBalanceStatus = "SUCCEEDED" | "FAILED" | "LOADING"
+
 function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStepProps) {
 
 
@@ -23,17 +24,17 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
 
     useEffect(() => {
         // TODO: Add validation for inputs
-        setNextStepEnabled(ncWalletAddress.length == 40);
-    }, [ncWalletAddress])
+        setNextStepEnabled(ncWalletAddress.length == 40 && walletBalanceStatus == "SUCCEEDED");
+    }, [ncWalletAddress, walletBalanceStatus])
 
     useEffect(() => {
-        if(!wallet)
+        if (!wallet)
             return;
         PoktProvider.getBalance(wallet.getAddress()).then(r => {
             setWalletBalanceStatus("SUCCEEDED");
             setWalletBalance(r)
         }).catch(() => setWalletBalanceStatus("FAILED"))
-    },[])
+    }, [])
 
     const finishStep = () => {
         onNextStep({})
@@ -51,14 +52,14 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
 
             <Box margin="2rem 0">
                 <Text color="white" margin="1rem 0">
-                    Stake amount
+                    Stake Amount Each
                 </Text>
-                <Input type="text"/>
+                <Input type="text" value={"60005"}/>
 
                 <Text color="white" margin="1rem 0">
-                    Additional Transfer Amount (i.e: Paying fees)
+                    Additional Transfer Amount Each (i.e: Paying TX Fees)
                 </Text>
-                <Input type="text"/>
+                <Input type="text" value={"0.01"}/>
 
                 <Text color="white" margin="1rem 0">
                     Non Custodial Address
@@ -78,6 +79,13 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
                 >
                     Change Output Address
                 </Checkbox>
+                <Text color="White" fontSize="12px" fontWeight="400">
+                    Amount of Nodes To Stake: {"10 POKT"}
+                </Text>
+                <Text color="White" fontSize="12px" fontWeight="400">
+                    Total Transfer Amount: {"10 POKT"}
+                </Text>
+
             </Box>
             <Flex width="100%" justify="flex-end">
                 <Button
