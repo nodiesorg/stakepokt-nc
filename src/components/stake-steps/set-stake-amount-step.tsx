@@ -99,12 +99,12 @@ function SetStakeAmountStep({onPrevStep, wallet, importedNodes, onNextStep}: Set
                 <Text color="white" margin="1rem 0">
                     Stake Amount Per Node
                 </Text>
-                <NDPoktDenomInput defaultPoktValue={new bigDecimal("60005")} onChange={handleStakePoktChange}/>
+                <NDPoktDenomInput defaultPoktValue={new bigDecimal("60005")} minPoktValue={new bigDecimal("15000")} onChange={handleStakePoktChange}/>
 
                 <Text color="white" margin="1rem 0">
                     Additional Transfer Amount Per Node
                 </Text>
-                <NDPoktDenomInput defaultPoktValue={new bigDecimal("0")} onChange={handleTransferPoktChange}/>
+                <NDPoktDenomInput defaultPoktValue={new bigDecimal("0")}  minPoktValue={new bigDecimal("0")}onChange={handleTransferPoktChange}/>
 
                 <Text color="white" margin="1rem 0">
                     Non Custodial Address
