@@ -53,7 +53,8 @@ export default function Home() {
     ...DefaultStakeForm,
   });
 
-  const onStepCompleted = (updatedForm: StakeForm) => {
+  const handleOnNextStep = (updatedForm: StakeForm) => {
+    // update form keys
     Object.keys(updatedForm).forEach((key: string) =>
       // @ts-ignore
       updatedForm[key] === undefined ? delete updatedForm[key] : {}
@@ -64,6 +65,7 @@ export default function Home() {
         ...updatedForm,
       };
     });
+    // Move to next step
     goToNextStep();
   };
 
@@ -99,11 +101,11 @@ export default function Home() {
                   margin="3rem 0"
                 >
                   <Step label={""} key={0}>
-                    <ImportNcWalletStep onNextStep={onStepCompleted} />
+                    <ImportNcWalletStep onNextStep={handleOnNextStep} />
                   </Step>
                   <Step label={""} key={1}>
                     <ImportNodeKeysStep
-                      onNextStep={onStepCompleted}
+                      onNextStep={handleOnNextStep}
                       onPrevStep={goToPrevStep}
                     />
                   </Step>
@@ -111,7 +113,7 @@ export default function Home() {
                     <SetStakeAmountStep
                       wallet={stakeForm.wallet}
                       importedNodes={stakeForm.nodesToStake}
-                      onNextStep={onStepCompleted}
+                      onNextStep={handleOnNextStep}
                       onPrevStep={goToPrevStep}
                     />
                   </Step>
