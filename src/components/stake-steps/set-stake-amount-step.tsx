@@ -3,17 +3,19 @@ import {ChangeEvent, useEffect, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
 import {KeyManager} from "@pokt-foundation/pocketjs-signer";
+import {PoktProvider} from "@/internal/pokt-rpc/provider";
 
 export type SetStakeAmountStepProps = { wallet: KeyManager | undefined } & BidirectionalStepProps;
 
+export type WalletRetrieveBalanceStatus = "SUCCEEDED" | "FAILED" | "LOADING"
 function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStepProps) {
 
 
     const [ncWalletAddress, setNcWalletAddress] = useState(wallet?.getAddress() || '');
-
-    const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
-        useState(false);
+    const [isEnableCustodialAddress, setIsEnableCustodialAddress] = useState(false);
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
+    const [walletBalance, setWalletBalance] = useState<BigInt>(BigInt("0"))
+    const [walletBalanceStatus, setWalletBalanceStatus] = useState<WalletRetrieveBalanceStatus>("LOADING")
 
     const changeNcWalletAddress = (event: ChangeEvent<HTMLInputElement>) => {
         setNcWalletAddress(event.target.value);
@@ -22,8 +24,16 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
     useEffect(() => {
         // TODO: Add validation for inputs
         setNextStepEnabled(ncWalletAddress.length == 40);
-
     }, [ncWalletAddress])
+
+    useEffect(() => {
+        if(!wallet)
+            return;
+        PoktProvider.getBalance(wallet.getAddress()).then(r => {
+            setWalletBalanceStatus("SUCCEEDED");
+            setWalletBalance(r)
+        }).catch(() => setWalletBalanceStatus("FAILED"))
+    },[])
 
     const finishStep = () => {
         onNextStep({})
@@ -36,7 +46,7 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
     return (
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
-                Specify the funding amounts
+                Wallet Balance: {walletBalanceStatus != "SUCCEEDED" ? walletBalanceStatus : walletBalance.toString()}
             </Text>
 
             <Box margin="2rem 0">
@@ -46,7 +56,7 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
                 <Input type="text"/>
 
                 <Text color="white" margin="1rem 0">
-                    Node balance amount
+                    Additional Transfer Amount (i.e: Paying fees)
                 </Text>
                 <Input type="text"/>
 

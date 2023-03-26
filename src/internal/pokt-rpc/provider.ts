@@ -1,6 +1,6 @@
-// Instantiate a provider for querying information on the chain!
-import {JsonRpcProvider} from "@pokt-foundation/pocketjs-provider";
+import { IsomorphicProvider } from '@pokt-foundation/pocketjs-isomorphic-provider'
 
-export const PoktProvider = new JsonRpcProvider({
+
+export const PoktProvider = new IsomorphicProvider({
     rpcUrl: process.env.POKT_RPC_URL!,
 });
