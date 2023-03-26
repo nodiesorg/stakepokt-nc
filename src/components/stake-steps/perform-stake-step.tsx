@@ -59,7 +59,7 @@ function StakeResult({nodeAliasTxMap}: StakeResultProps) {
     return (
         <Tr>
             <Td>{nodeAliasTxMap.nodeAlias}</Td>
-            <Td>r</Td>
+            <Td>{!stakeTx ? "Can't find Stake TX": stakeTx.node.address}</Td>
             <Td>
                 {!stakeTx ? "Can't find Stake TX" : (stakeTx?.error ? JSON.stringify(stakeTx.error) : (stakeTx.results?.txHash || 'Could not determine TX Hash'))}
             </Td>
