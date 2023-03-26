@@ -44,14 +44,19 @@ export default function Home() {
     })
 
     const onStepCompleted = (updatedForm: StakeForm) => {
+        // @ts-ignore
+        Object.keys(updatedForm).forEach((key:string) => updatedForm[key] === undefined ? delete updatedForm[key] : {});
+        console.log(updatedForm);
         setStakeForm((prevState) => {
             return {
+                ...prevState,
                 ...updatedForm,
-                prevState,
             }
         })
         goToNextStep();
     }
+
+    console.log(stakeForm);
 
     return (
         <>
@@ -90,7 +95,7 @@ export default function Home() {
                                         <ImportNodeKeysStep onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={2}>
-                                        <SetStakeAmountStep onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
+                                        <SetStakeAmountStep wallet={stakeForm.wallet} onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={3}>
                                         <PerformStakeStep/>

@@ -1,24 +1,37 @@
 import {Box, Button, Checkbox, Flex, Input, Text} from "@chakra-ui/react";
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
 import {KeyManager} from "@pokt-foundation/pocketjs-signer";
 
-export type SetStakeAmountStepProps = {} & BidirectionalStepProps;
+export type SetStakeAmountStepProps = { wallet: KeyManager | undefined } & BidirectionalStepProps;
 
-function SetStakeAmountStep({onPrevStep, onNextStep}: SetStakeAmountStepProps) {
+function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStepProps) {
+
+
+    const [ncWalletAddress, setNcWalletAddress] = useState(wallet?.getAddress() || '');
+
     const [isEnableCustodialAddress, setIsEnableCustodialAddress] =
         useState(false);
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
 
+    const changeNcWalletAddress = (event: ChangeEvent<HTMLInputElement>) => {
+        setNcWalletAddress(event.target.value);
+    }
+
     useEffect(() => {
         // TODO: Add validation for inputs
-        setNextStepEnabled(true);
-    }, [])
+        setNextStepEnabled(ncWalletAddress.length == 40);
+
+    }, [ncWalletAddress])
 
     const finishStep = () => {
         onNextStep({})
     }
+
+
+    if (!wallet)
+        return <></>
 
     return (
         <Box>
@@ -41,9 +54,10 @@ function SetStakeAmountStep({onPrevStep, onNextStep}: SetStakeAmountStepProps) {
                     Non Custodial Address
                 </Text>
                 <Input
+                    value={ncWalletAddress}
                     type="text"
+                    onChange={changeNcWalletAddress}
                     disabled={!isEnableCustodialAddress}
-                    placeholder="888260190301f98da2ce1eed5c08c0699be1142f"
                 />
                 <Checkbox
                     color="white"

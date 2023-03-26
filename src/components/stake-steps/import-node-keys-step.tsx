@@ -31,8 +31,9 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
             const nodeAlias = c[0].trim();
             const publicKey = c[1].trim();
             const address = c[2].trim();
-            if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 20)
+            if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 40) {
                 return undefined;
+            }
 
             let domain: string | undefined;
             let chains: string[] | undefined;
@@ -61,12 +62,14 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
             return;
         }
 
-        setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${importedAccounts.length}`)
-        if (importedAccounts.length > 0) {
-            setNextStepEnabled(true);
+        const filteredAccounts = parsedAccounts.filter(s => s !== undefined);
+
+        if (filteredAccounts.length > 0) {
             // @ts-ignore
-            setImportedAccounts(parsedAccounts.filter(s => s !== undefined));
+            setImportedAccounts(filteredAccounts);
+            setNextStepEnabled(true);
         }
+        setUploadFilePrompt(`Selected file: ${keyFile.name}, nodes detected: ${filteredAccounts.length}`)
     }
 
     const onImportedNodesAdded = (e: File[]) => {
