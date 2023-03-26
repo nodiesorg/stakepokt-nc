@@ -14,7 +14,7 @@ import {
   TransactionResponse,
 } from '@pokt-foundation/pocketjs-types'
 import { TxEncoderFactory } from './factory/tx-encoder-factory'
-import { CoinDenom, TxMsg, TxSignature } from './models'
+import { CoinDenom, TxMsg, TxSignature } from './models/'
 import { InvalidChainIDError, NoProviderError, NoSignerError } from './errors'
 import { AbstractBuilder } from './abstract-tx-builder'
 

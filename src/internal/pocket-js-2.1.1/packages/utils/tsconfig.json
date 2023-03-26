@@ -3,13 +3,11 @@
   "display": "Default",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "composite": true,
     "declarationDir": "dist",
     "declaration": true
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src"],
   "exclude": ["node_modules", "dist", "jest.config.js"]
 }

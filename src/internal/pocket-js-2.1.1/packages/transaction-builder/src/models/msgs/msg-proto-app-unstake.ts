@@ -1,5 +1,5 @@
 import { Buffer } from 'buffer'
-import { MsgBeginUnstake } from '../proto/generated/tx-signer'
+import { MsgBeginUnstake } from './../proto/generated/tx-signer'
 import { Any } from '../proto/generated/google/protobuf/any'
 import { TxMsg } from './tx-msg'
 

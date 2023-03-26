@@ -10,7 +10,7 @@ import {
   RawTxRequest,
   TransactionResponse,
 } from '@pokt-foundation/pocketjs-types'
-import { TxMsg } from './models'
+import { TxMsg } from './models/'
 
 export type ChainID = 'mainnet' | 'testnet' | 'localnet'
 

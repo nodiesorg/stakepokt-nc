@@ -1,4 +1,4 @@
-import { Pocket } from '../src'
+import { Pocket } from '../src/index'
 
 describe('gm', () => {
   it('says gm', () => {

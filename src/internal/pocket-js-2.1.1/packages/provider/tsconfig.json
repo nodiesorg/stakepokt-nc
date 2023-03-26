@@ -3,15 +3,13 @@
   "display": "Default",
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": ".",
     "composite": true,
     "declaration": true,
     "declarationDir": "dist",
     "resolveJsonModule": true
   },
-  "references": [{ "path": "../types"}, { "path": "../abstract-provider"}],
-  "include": [
-    "src"
-  ],
+  "references": [{ "path": "../types" }, { "path": "../abstract-provider" }],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }
