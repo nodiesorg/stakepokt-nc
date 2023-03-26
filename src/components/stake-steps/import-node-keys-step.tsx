@@ -5,6 +5,7 @@ import {ArrowBackIcon} from "@chakra-ui/icons";
 import * as CSV from 'csv-string';
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
+import {isHex} from "@/internal/pokt-utils/pokt-validate";
 
 export type ImportNodeKeysStepProps = {} & BidirectionalStepProps;
 
@@ -29,7 +30,7 @@ function ImportNodeKeysStep({onPrevStep, onNextStep}: ImportNodeKeysStepProps) {
             const nodeAlias = c[0].trim();
             const publicKey = c[1].trim();
             const address = c[2].trim();
-            if (nodeAlias.length == 0 || publicKey.length != 64 || address.length != 40) {
+            if (nodeAlias.length == 0 || (publicKey.length != 64 || !isHex(publicKey)) || (address.length != 40 || !isHex(address))) {
                 return undefined;
             }
 

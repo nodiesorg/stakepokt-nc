@@ -92,7 +92,7 @@ export default function Home() {
                                         <ImportNodeKeysStep onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={2}>
-                                        <SetStakeAmountStep wallet={stakeForm.wallet} onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
+                                        <SetStakeAmountStep wallet={stakeForm.wallet} importedNodes={stakeForm.nodesToStake} onNextStep={onStepCompleted} onPrevStep={goToPrevStep}/>
                                     </Step>
                                     <Step label={""} key={3}>
                                         <PerformStakeStep stakeForm={stakeForm}/>

@@ -3,7 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 
 type DropdownFileTypes = "ppk" | "csv" | "txt" | "json";
 
-type NodiesDropzoneProps = {
+type NDDropzoneProps = {
   onDrop: (acceptedFiles: any) => void;
   prompt: string;
   acceptedFileType: DropdownFileTypes
@@ -20,7 +20,7 @@ function transformDropzoneAcceptType(fileType: DropdownFileTypes): Accept {
   }
 }
 
-const NDDropzone = ({ onDrop, acceptedFileType, prompt }: NodiesDropzoneProps) => {
+const NDDropzone = ({ onDrop, acceptedFileType, prompt }: NDDropzoneProps) => {
 
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -14,6 +14,7 @@ specifiers:
   eslint: 8.36.0
   eslint-config-next: 13.2.4
   framer-motion: ^10.8.5
+  js-big-decimal: ^1.4.1
   next: 13.2.4
   react: 18.2.0
   react-dom: 18.2.0
@@ -34,6 +35,7 @@ dependencies:
   eslint: 8.36.0
   eslint-config-next: 13.2.4_vgl77cfdswitgr47lm5swmv43m
   framer-motion: 10.9.1_biqbaboplfbrettd7655fr4n2y
+  js-big-decimal: 1.4.1
   next: 13.2.4_biqbaboplfbrettd7655fr4n2y
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
@@ -2929,6 +2931,10 @@ packages:
 
   /isexe/2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
+    dev: false
+
+  /js-big-decimal/1.4.1:
+    resolution: {integrity: sha512-lEE6kXojqv1/ky/H0nTTg5gi+1g+V6O94T2GPpZTGayXGeYIC6f6PszckNsEa7S2+qgas9ZOEkONMryxXVKWwQ==}
     dev: false
 
   /js-sdsl/4.4.0:

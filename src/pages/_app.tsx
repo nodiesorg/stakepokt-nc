@@ -10,6 +10,8 @@ import { Input } from "@/styles/Input";
 import { Button } from "@/styles/Button";
 
 import { Inter, Poppins, Roboto } from "@next/font/google";
+import {NumberInput} from "@/styles/NumberInput";
+
 
 // Fonts
 const roboto = Roboto({
@@ -55,6 +57,7 @@ const theme = extendTheme({
   components: {
     Button,
     Input,
+    NumberInput,
     Steps: CustomStepsStyles,
   },
 });

@@ -1,38 +1,71 @@
 import {Box, Button, Checkbox, Flex, Input, Text} from "@chakra-ui/react";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useRef, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
 import {PoktProvider} from "@/internal/pokt-rpc/provider";
 import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
+import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
+import {isHex} from "@/internal/pokt-utils/pokt-validate";
+import NDPoktDenomInput from "@/components/nd-input/nd-pokt-input";
+import bigDecimal from "js-big-decimal";
+import {POKT_DENOM_UNIT, toPokt} from "@/internal/pokt-utils/pokt-denom";
 
-export type SetStakeAmountStepProps = { wallet: KeyManager | undefined } & BidirectionalStepProps;
+export type SetStakeAmountStepProps =
+    { wallet: KeyManager | undefined, importedNodes: ImportedNcNode[] | undefined }
+    & BidirectionalStepProps;
 
 export type WalletRetrieveBalanceStatus = "SUCCEEDED" | "FAILED" | "LOADING"
 
-function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStepProps) {
+
+function calculateTotalCost(numberOfNodes: number, stakeAmount: bigDecimal, transferAmount: bigDecimal) {
+    let txFeeEach = new bigDecimal("0.01")
+    if (transferAmount.compareTo(new bigDecimal("0")) > 0) {
+        txFeeEach = txFeeEach.add(txFeeEach)
+    }
+    const txFeeTotal = new bigDecimal(numberOfNodes).multiply(txFeeEach)
+    const transferTotal = new bigDecimal(numberOfNodes).multiply(transferAmount)
+    const stakeTotal = new bigDecimal(numberOfNodes).multiply(stakeAmount)
+    return transferTotal.add(stakeTotal).add(txFeeTotal)
+}
+
+function SetStakeAmountStep({onPrevStep, wallet, importedNodes, onNextStep}: SetStakeAmountStepProps) {
 
 
     const [ncWalletAddress, setNcWalletAddress] = useState(wallet?.getAddress() || '');
     const [isEnableCustodialAddress, setIsEnableCustodialAddress] = useState(false);
     const [nextStepEnabled, setNextStepEnabled] = useState(false)
-    const [walletBalance, setWalletBalance] = useState<BigInt>(BigInt("0"))
+    const [walletPoktBalance, setWalletPoktBalance] = useState<bigDecimal>(new bigDecimal("0"))
+
+    const [stakePoktAmount, setStakePoktAmount] = useState<bigDecimal>(new bigDecimal("0"))
+
+    const handleStakePoktChange = (poktAmount: bigDecimal) => {
+        setStakePoktAmount(poktAmount);
+    }
+    const handleTransferPoktChange = (poktAmount: bigDecimal) => {
+        setTransferPoktAmount(poktAmount);
+    }
+
+    const [transferPoktAmount, setTransferPoktAmount] = useState<bigDecimal>(new bigDecimal("0"))
+
     const [walletBalanceStatus, setWalletBalanceStatus] = useState<WalletRetrieveBalanceStatus>("LOADING")
 
     const changeNcWalletAddress = (event: ChangeEvent<HTMLInputElement>) => {
         setNcWalletAddress(event.target.value);
     }
 
+    const numberOfNodes = importedNodes?.length || 0
+
     useEffect(() => {
-        // TODO: Add validation for inputs
-        setNextStepEnabled(ncWalletAddress.length == 40 && walletBalanceStatus == "SUCCEEDED");
-    }, [ncWalletAddress, walletBalanceStatus])
+        const totalCostPokt = calculateTotalCost(numberOfNodes, stakePoktAmount, transferPoktAmount)
+        setNextStepEnabled(ncWalletAddress.length == 40 && isHex(ncWalletAddress) && walletBalanceStatus == "SUCCEEDED" && walletPoktBalance.compareTo(totalCostPokt) >= 0);
+    }, [ncWalletAddress, walletBalanceStatus, stakePoktAmount, transferPoktAmount])
 
     useEffect(() => {
         if (!wallet)
             return;
         PoktProvider.getBalance(wallet.getAddress()).then(r => {
             setWalletBalanceStatus("SUCCEEDED");
-            setWalletBalance(r)
+            setWalletPoktBalance(toPokt(new bigDecimal(r.toString())))
         }).catch((e) => {
             console.log(e);
             setWalletBalanceStatus("FAILED")
@@ -40,9 +73,11 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
     }, [])
 
     const finishStep = () => {
-        onNextStep({})
+        onNextStep({
+            stakeAmount: stakePoktAmount,
+            transferAmount: transferPoktAmount,
+        })
     }
-
 
     if (!wallet)
         return <></>
@@ -50,19 +85,26 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
     return (
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
-                Wallet Balance: {walletBalanceStatus != "SUCCEEDED" ? walletBalanceStatus : walletBalance.toString()}
+                Wallet
+                Balance: {walletBalanceStatus != "SUCCEEDED" ? walletBalanceStatus : walletPoktBalance.getValue()}
+            </Text>
+            <Text color="White" fontSize="12px" fontWeight="400">
+                Amount of Nodes To Stake: {`${numberOfNodes}`}
+            </Text>
+            <Text color="White" fontSize="12px" fontWeight="400">
+                Total Transfer Amount: {calculateTotalCost(numberOfNodes, stakePoktAmount, transferPoktAmount).getValue()}
             </Text>
 
             <Box margin="2rem 0">
                 <Text color="white" margin="1rem 0">
-                    Stake Amount Each
+                    Stake Amount Per Node
                 </Text>
-                <Input type="text" value={"60005"}/>
+                <NDPoktDenomInput defaultPoktValue={new bigDecimal("60005")} onChange={handleStakePoktChange}/>
 
                 <Text color="white" margin="1rem 0">
-                    Additional Transfer Amount Each (i.e: Paying TX Fees)
+                    Additional Transfer Amount Per Node
                 </Text>
-                <Input type="text" value={"0.01"}/>
+                <NDPoktDenomInput defaultPoktValue={new bigDecimal("0")} onChange={handleTransferPoktChange}/>
 
                 <Text color="white" margin="1rem 0">
                     Non Custodial Address
@@ -82,12 +124,7 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
                 >
                     Change Output Address
                 </Checkbox>
-                <Text color="White" fontSize="12px" fontWeight="400">
-                    Amount of Nodes To Stake: {"10 POKT"}
-                </Text>
-                <Text color="White" fontSize="12px" fontWeight="400">
-                    Total Transfer Amount: {"10 POKT"}
-                </Text>
+
 
             </Box>
             <Flex width="100%" justify="flex-end">
