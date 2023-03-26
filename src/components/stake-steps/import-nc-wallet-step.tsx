@@ -56,7 +56,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                 <Text color="white" margin="1rem 0">
                     Passphrase
                 </Text>
-                <Input type="text" onChange={handlePassphraseInput} value={passphrase}/>
+                <Input type="password" onChange={handlePassphraseInput} value={passphrase}/>
                 <NDDropzone onDrop={onKeyFileAdded} acceptedFileType="json" prompt={filePrompt}/>
             </Box>
             <Flex width="100%" justify="flex-end">
