@@ -100,11 +100,10 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
         const tb = getTransactionBuilder(wallet)
         const outputAddress = customOutputAddress || wallet.getAddress()
         const transferAmountUPokt = toUPokt(transferAmount)
-        const stakeAmountUPokt = toUPokt(transferAmount)
+        const stakeAmountUPokt = toUPokt(stakeAmount)
 
         const txMsgsPair = nodesToStake.map(w => {
             let sendTxMsg;
-
             // Check if there is a send tx
             if (transferAmountUPokt.compareTo(new bigDecimal("0")) > 0) {
                 sendTxMsg = tb.send({
@@ -125,7 +124,7 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
                 node: w,
                 txMsgs: [
                     {txMsg: stakeTxMsg, type: "stake"} as TxMsgDetailed,
-                    {txMsg: stakeTxMsg, type: "send"} as TxMsgDetailed,
+                    {txMsg: sendTxMsg, type: "send"} as TxMsgDetailed,
                 ]
             }
         })
@@ -145,7 +144,6 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
         }
     }
 
-    console.log(JSON.stringify(stakeResults))
     useEffect(() => {
         handleStake();
     }, [])
