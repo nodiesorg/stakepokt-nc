@@ -145,6 +145,7 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
         }
     }
 
+    console.log(JSON.stringify(stakeResults))
     useEffect(() => {
         handleStake();
     }, [])
