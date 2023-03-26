@@ -11,9 +11,9 @@ export type StakeForm = {
 }
 
 export const DefaultStakeForm: StakeForm = {
-    customOutputAddress: "",
-    stakeAmount: "",
-    transferAmount: "",
+    customOutputAddress: undefined,
+    stakeAmount: undefined,
+    transferAmount: undefined,
     wallet: undefined,
     nodesToStake: [],
 }
