@@ -2,8 +2,8 @@ import {Box, Button, Checkbox, Flex, Input, Text} from "@chakra-ui/react";
 import {ChangeEvent, useEffect, useState} from "react";
 import {BidirectionalStepProps} from "@/components/stake-steps/step-props";
 import {ArrowBackIcon} from "@chakra-ui/icons";
-import {KeyManager} from "@pokt-foundation/pocketjs-signer";
 import {PoktProvider} from "@/internal/pokt-rpc/provider";
+import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
 
 export type SetStakeAmountStepProps = { wallet: KeyManager | undefined } & BidirectionalStepProps;
 
@@ -33,7 +33,10 @@ function SetStakeAmountStep({onPrevStep, wallet, onNextStep}: SetStakeAmountStep
         PoktProvider.getBalance(wallet.getAddress()).then(r => {
             setWalletBalanceStatus("SUCCEEDED");
             setWalletBalance(r)
-        }).catch(() => setWalletBalanceStatus("FAILED"))
+        }).catch((e) => {
+            console.log(e);
+            setWalletBalanceStatus("FAILED")
+        })
     }, [])
 
     const finishStep = () => {

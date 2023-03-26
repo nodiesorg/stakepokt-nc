@@ -14,11 +14,6 @@
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
     "@next/font": "^13.2.4",
-    "@pokt-foundation/pocketjs-isomorphic-provider": "^2.1.0",
-    "@pokt-foundation/pocketjs-relayer": "^2.1.0",
-    "@pokt-foundation/pocketjs-signer": "^2.1.0",
-    "@pokt-foundation/pocketjs-transaction-builder": "^2.2.0-rc.3",
-    "@pokt-foundation/pocketjs-utils": "^2.1.0",
     "@types/node": "18.15.5",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
@@ -32,5 +27,8 @@
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
     "typescript": "4.9.5"
+  },
+  "devDependencies": {
+    "ts-loader": "^9.4.2"
   }
 }

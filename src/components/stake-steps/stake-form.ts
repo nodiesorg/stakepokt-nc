@@ -1,7 +1,5 @@
-import {Account} from "@pokt-foundation/pocketjs-types";
 import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
-import {KeyManager} from "@pokt-foundation/pocketjs-signer";
-
+import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
 
 export type StakeForm = {
     wallet?: KeyManager;

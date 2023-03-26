@@ -1,0 +1,35 @@
+{
+  "name": "@pokt-foundation/pocketjs-monorepo",
+  "version": "0.0.3",
+  "scripts": {
+    "build": "turbo run build",
+    "release": "RELEASE_MODE=true pnpm publish",
+    "build:abstract-provider": "turbo run build --scope=*abstract-provider* --no-deps",
+    "build:pocket": "turbo run build --scope=@pokt-foundation/pocketjs --no-deps",
+    "build:provider": "turbo run build --scope=*provider* --no-deps",
+    "build:relayer": "turbo run build --scope=@pokt-foundation/relayer --no-deps",
+    "build:signer": "turbo run build --scope=*signer* --no-deps",
+    "build:txs": "turbo run build --scope=*transaction* --no-deps",
+    "build:types": "turbo run build --scope=*types* --no-deps",
+    "build:utils": "turbo run build --scope=*utils* --no-deps",
+    "dev": "turbo run dev --parallel",
+    "dev:abstract-provider": "turbo run dev --scope=*abstract-provider* --no-cache --no-deps",
+    "dev:all": "turbo run dev --parallel --no-cache",
+    "dev:pocket": "turbo run dev --scope=@pokt-foundation/pocketjs --no-cache --no-deps",
+    "dev:provider": "turbo run dev --scope=*provider* --no-cache --no-deps",
+    "dev:signer": "turbo run dev --scope=*signer* --no-cache --no-deps",
+    "dev:txs": "turbo run dev --scope=*transaction* --no-deps",
+    "dev:types": "turbo run dev --scope=*types* --no-cache --no-deps",
+    "dev:utils": "turbo run dev --scope=*utils* --no-cache --no-deps",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepublishOnly": "node ./scripts/prepublish.js"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1",
+    "turbo": "latest",
+    "typescript": "^4.5.5"
+  },
+  "packageManager": "pnpm@6.22.2"
+}

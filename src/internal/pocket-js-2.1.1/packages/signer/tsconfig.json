@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Default",
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "composite": true,
+    "declaration": true,
+    "declarationDir": "dist"
+  },
+  "references": [
+    { "path": "../abstract-provider"},
+    { "path": "../provider"},
+    { "path": "../utils"},
+    { "path": "../types"}
+  ],
+  "include": [
+    "src"
+  ],
+  "exclude": ["node_modules"]
+}

@@ -1,8 +1,9 @@
 import {Box, Button, Flex, Input, Text} from "@chakra-ui/react";
 import NDDropzone from "../nd-dropzone/nd-dropzone";
 import {ChangeEvent, useEffect, useState} from "react";
-import {KeyManager} from "@pokt-foundation/pocketjs-signer";
+
 import {ForwardStepProps} from "@/components/stake-steps/step-props";
+import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
 
 
 export type ImportNcWalletStepProps = {} & ForwardStepProps;
