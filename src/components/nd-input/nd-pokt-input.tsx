@@ -1,7 +1,7 @@
 import bigDecimal from 'js-big-decimal';
 
 import {Input} from "@chakra-ui/react";
-import {ChangeEvent, ReactNode, useState} from "react";
+import {ChangeEvent, ReactNode, useEffect, useRef, useState} from "react";
 import {Simulate} from "react-dom/test-utils";
 import invalid = Simulate.invalid;
 import {toUPokt} from "@/internal/pokt-utils/pokt-denom";
@@ -9,7 +9,8 @@ import {toUPokt} from "@/internal/pokt-utils/pokt-denom";
 type NDPoktDenomInputProps = {
     maxPoktValue?: bigDecimal,
     minPoktValue?: bigDecimal,
-    defaultPoktValue: bigDecimal
+    defaultPoktValue: bigDecimal,
+    showZeroValue?: boolean,
     invalid?: boolean;
     onChange?: (value: bigDecimal) => void;
 } & { children?: ReactNode };
@@ -24,15 +25,17 @@ const NDPoktDenomInput =
          onChange,
          defaultPoktValue,
          maxPoktValue,
-         minPoktValue
+         minPoktValue,
      }: NDPoktDenomInputProps) => {
-        const [poktValue, setPoktValue] = useState<bigDecimal>(defaultPoktValue);
+        const [poktValueString, setPoktValueString] = useState<string>(defaultPoktValue.getValue());
+
         const [invalidReason, setInvalidReason] = useState('')
-        const handlePoktValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-            const input = event.target.value;
-            if (!POKT_REGEX.test(input))
-                return;
-            const inputDecimal = new bigDecimal(input)
+
+        useEffect(() => {
+            // Callback change values
+            const inputDecimal = new bigDecimal(poktValueString.length > 0 ? poktValueString : "0")
+            if (onChange != undefined)
+                onChange(inputDecimal)
             if (minPoktValue && inputDecimal.compareTo(minPoktValue) < 0) {
                 setInvalidReason(`${inputDecimal.getValue()} is less the required minimum ${minPoktValue.getValue()}`)
                 return
@@ -42,15 +45,25 @@ const NDPoktDenomInput =
                 return
             }
             setInvalidReason("")
-            setPoktValue(inputDecimal)
-            if (onChange != undefined)
-                onChange(inputDecimal)
+        }, [poktValueString])
+
+        const handlePoktValueChange = (event: ChangeEvent<HTMLInputElement>) => {
+            const input = event.target.value;
+            // Reset values if user erases all inputs
+            if (input.length == 0) {
+                setPoktValueString(input)
+                return;
+            }
+            // Check if it fits decimal format
+            if (!POKT_REGEX.test(input))
+                return;
+            setPoktValueString(input);
         }
 
         return (
             <Input
                 isInvalid={invalidReason.length > 0}
-                value={poktValue.getValue()}
+                value={poktValueString}
                 onChange={handlePoktValueChange}
             >
                 {children}

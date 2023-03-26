@@ -16,6 +16,7 @@ export type SetStakeAmountStepProps =
 
 export type WalletRetrieveBalanceStatus = "SUCCEEDED" | "FAILED" | "LOADING"
 
+const MIN_POKT_STAKE = new bigDecimal("15000")
 
 function calculateTotalCost(numberOfNodes: number, stakeAmount: bigDecimal, transferAmount: bigDecimal) {
     let txFeeEach = new bigDecimal("0.01")
@@ -57,7 +58,7 @@ function SetStakeAmountStep({onPrevStep, wallet, importedNodes, onNextStep}: Set
 
     useEffect(() => {
         const totalCostPokt = calculateTotalCost(numberOfNodes, stakePoktAmount, transferPoktAmount)
-        setNextStepEnabled(ncWalletAddress.length == 40 && isHex(ncWalletAddress) && walletBalanceStatus == "SUCCEEDED" && walletPoktBalance.compareTo(totalCostPokt) >= 0);
+        setNextStepEnabled(ncWalletAddress.length == 40 && isHex(ncWalletAddress) && walletBalanceStatus == "SUCCEEDED" && walletPoktBalance.compareTo(totalCostPokt) >= 0 && stakePoktAmount.compareTo(MIN_POKT_STAKE) >= 0);
     }, [ncWalletAddress, walletBalanceStatus, stakePoktAmount, transferPoktAmount])
 
     useEffect(() => {
@@ -99,7 +100,7 @@ function SetStakeAmountStep({onPrevStep, wallet, importedNodes, onNextStep}: Set
                 <Text color="white" margin="1rem 0">
                     Stake Amount Per Node
                 </Text>
-                <NDPoktDenomInput defaultPoktValue={new bigDecimal("60005")} minPoktValue={new bigDecimal("15000")} onChange={handleStakePoktChange}/>
+                <NDPoktDenomInput defaultPoktValue={new bigDecimal("60005")} minPoktValue={MIN_POKT_STAKE} onChange={handleStakePoktChange}/>
 
                 <Text color="white" margin="1rem 0">
                     Additional Transfer Amount Per Node
