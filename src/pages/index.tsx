@@ -53,7 +53,8 @@ export default function Home() {
     ...DefaultStakeForm,
   });
 
-  const onStepCompleted = (updatedForm: StakeForm) => {
+  const handleOnNextStep = (updatedForm: StakeForm) => {
+    // update form keys
     Object.keys(updatedForm).forEach((key: string) =>
       // @ts-ignore
       updatedForm[key] === undefined ? delete updatedForm[key] : {}
@@ -64,13 +65,14 @@ export default function Home() {
         ...updatedForm,
       };
     });
+    // Move to next step
     goToNextStep();
   };
 
   return (
     <>
       <Head>
-        <title>Nodies</title>
+        <title>Nodies - Non Custodial Staking Tool</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -103,11 +105,11 @@ export default function Home() {
                   margin="3rem 0"
                 >
                   <Step label={""} key={0}>
-                    <ImportNcWalletStep onNextStep={onStepCompleted} />
+                    <ImportNcWalletStep onNextStep={handleOnNextStep} />
                   </Step>
                   <Step label={""} key={1}>
                     <ImportNodeKeysStep
-                      onNextStep={onStepCompleted}
+                      onNextStep={handleOnNextStep}
                       onPrevStep={goToPrevStep}
                     />
                   </Step>
@@ -115,7 +117,7 @@ export default function Home() {
                     <SetStakeAmountStep
                       wallet={stakeForm.wallet}
                       importedNodes={stakeForm.nodesToStake}
-                      onNextStep={onStepCompleted}
+                      onNextStep={handleOnNextStep}
                       onPrevStep={goToPrevStep}
                     />
                   </Step>
@@ -132,7 +134,7 @@ export default function Home() {
               {/* Powered by Nodies */}
               <Box margin="2rem 0" textAlign="center">
                 <Text color="#737682" fontFamily="Poppins" fontSize="12px">
-                  Powered by
+                  Created by
                 </Text>
                 <Image
                   src="/images/nodies.svg"

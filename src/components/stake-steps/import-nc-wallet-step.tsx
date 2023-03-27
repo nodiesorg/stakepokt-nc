@@ -1,6 +1,6 @@
 import {Box, Button, Flex, Input, Text} from "@chakra-ui/react";
 import NDDropzone from "../nd-dropzone/nd-dropzone";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, KeyboardEvent, useEffect, useState} from "react";
 
 import {ForwardStepProps} from "@/components/stake-steps/step-props";
 import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
@@ -26,6 +26,12 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
             })
         } catch (e) {
             setUploadFilePrompt(`${filePrompt}, PPK malformed or passphrase invalid.`)
+        }
+    }
+
+    const handleEnterPassphrase = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key == "Enter" && nextStepEnabled) {
+            finishStep()
         }
     }
 
@@ -56,7 +62,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                 <Text color="white" margin="1rem 0">
                     Passphrase
                 </Text>
-                <Input type="password" onChange={handlePassphraseInput} value={passphrase}/>
+                <Input type="password" onChange={handlePassphraseInput} onKeyDown={handleEnterPassphrase} value={passphrase}/>
                 <NDDropzone onDrop={onKeyFileAdded} acceptedFileType="json" prompt={filePrompt}/>
             </Box>
             <Flex width="100%" justify="flex-end">

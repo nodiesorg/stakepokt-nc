@@ -74,9 +74,12 @@ function SetStakeAmountStep({onPrevStep, wallet, importedNodes, onNextStep}: Set
     }, [])
 
     const finishStep = () => {
+        // Checks once again if it's valid NC wallet address & if it doesn't match the existing imported wallet address.
+        const customNonCustodialAddress = isEnableCustodialAddress && isHex(ncWalletAddress) && ncWalletAddress.length == 40 && ncWalletAddress != wallet?.getAddress() ? ncWalletAddress : undefined
         onNextStep({
             stakeAmount: stakePoktAmount,
             transferAmount: transferPoktAmount,
+            customOutputAddress: customNonCustodialAddress,
         })
     }
 

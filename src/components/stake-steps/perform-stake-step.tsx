@@ -59,7 +59,7 @@ function StakeResult({nodeAliasTxMap}: StakeResultProps) {
     return (
         <Tr>
             <Td>{nodeAliasTxMap.nodeAlias}</Td>
-            <Td>r</Td>
+            <Td>{!stakeTx ? "Can't find Stake TX": stakeTx.node.address}</Td>
             <Td>
                 {!stakeTx ? "Can't find Stake TX" : (stakeTx?.error ? JSON.stringify(stakeTx.error) : (stakeTx.results?.txHash || 'Could not determine TX Hash'))}
             </Td>
@@ -70,8 +70,14 @@ function StakeResult({nodeAliasTxMap}: StakeResultProps) {
     )
 }
 
+async function stubSubmit ({txMsg: TxMsg}: any) {
+    return {
+        logs: "123",
+    } as TransactionResponse
+}
+
 function submitTxNodePair(node: ImportedNcNode, tb: TransactionBuilder, txMsgs: TxMsgDetailed[]) {
-    const pairTxSubmit = txMsgs.map((tx) => tb.submit({txMsg: tx.txMsg}).then((r: TransactionResponse) => ({
+    const pairTxSubmit = txMsgs.map((tx) => stubSubmit({txMsg: tx.txMsg}).then((r: TransactionResponse) => ({
         node: node,
         type: tx.type,
         result: r
@@ -94,11 +100,10 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
         const tb = getTransactionBuilder(wallet)
         const outputAddress = customOutputAddress || wallet.getAddress()
         const transferAmountUPokt = toUPokt(transferAmount)
-        const stakeAmountUPokt = toUPokt(transferAmount)
+        const stakeAmountUPokt = toUPokt(stakeAmount)
 
         const txMsgsPair = nodesToStake.map(w => {
             let sendTxMsg;
-
             // Check if there is a send tx
             if (transferAmountUPokt.compareTo(new bigDecimal("0")) > 0) {
                 sendTxMsg = tb.send({
@@ -119,7 +124,7 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
                 node: w,
                 txMsgs: [
                     {txMsg: stakeTxMsg, type: "stake"} as TxMsgDetailed,
-                    {txMsg: stakeTxMsg, type: "send"} as TxMsgDetailed,
+                    {txMsg: sendTxMsg, type: "send"} as TxMsgDetailed,
                 ]
             }
         })
