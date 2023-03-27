@@ -130,7 +130,7 @@ export default function Home() {
               {/* Powered by Nodies */}
               <Box margin="2rem 0" textAlign="center">
                 <Text color="#737682" fontFamily="Poppins" fontSize="12px">
-                  Powered by
+                  Created by
                 </Text>
                 <Image
                   src="/images/nodies.svg"
