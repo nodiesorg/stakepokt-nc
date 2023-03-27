@@ -77,7 +77,11 @@ export default function Home() {
 
       <Box as="main" minHeight="100vh">
         <Flex alignItems="center" minHeight="100vh">
-          <Container maxWidth="3xl" height="100%">
+          <Container
+            maxWidth={activeStep !== 3 ? "3xl" : "5xl"}
+            height="100%"
+            padding="2rem"
+          >
             {/* Multistep card */}
             <Card backgroundColor="#1B1E30">
               <CardBody>
@@ -124,7 +128,7 @@ export default function Home() {
             </Card>
 
             {/* Footer */}
-            <Box as="footer" marginBottom="2rem">
+            <Box as="footer">
               {/* Powered by Nodies */}
               <Box margin="2rem 0" textAlign="center">
                 <Text color="#737682" fontFamily="Poppins" fontSize="12px">
