@@ -16,10 +16,11 @@ import {
 
 import { Step, Steps, useSteps } from "chakra-ui-steps";
 
+import PerformStakeStep from "@/components/stake-steps/perform-stake-step";
 import ImportNcWalletStep from "@/components/stake-steps/import-nc-wallet-step";
 import ImportNodeKeysStep from "@/components/stake-steps/import-node-keys-step";
 import SetStakeAmountStep from "@/components/stake-steps/set-stake-amount-step";
-import PerformStakeStep from "@/components/stake-steps/perform-stake-step";
+
 import {
   DefaultStakeForm,
   StakeForm,
@@ -80,7 +81,7 @@ export default function Home() {
       <Box as="main" minHeight="100vh">
         <Flex alignItems="center" minHeight="100vh">
           <Container
-            maxWidth={activeStep !== 3 ? "3xl" : "5xl"}
+            maxWidth={activeStep === stepMetadata.length - 1 ? "5xl" : "3xl"}
             height="100%"
             padding="2rem"
           >
