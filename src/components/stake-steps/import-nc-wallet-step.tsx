@@ -1,5 +1,14 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
-import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Text,
+  Tooltip,
+  Icon,
+  HStack,
+} from "@chakra-ui/react";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 
 import NdInput from "@/components//nd-input/nd-input";
 import NDDropzone from "@/components//nd-dropzone/nd-dropzone";
@@ -65,9 +74,17 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
       </Text>
 
       <Box margin="2rem 0">
-        <Text color="white" margin="1rem 0">
-          Passphrase
-        </Text>
+        <HStack>
+          <Text color="white" margin="1rem 0">
+            Passphrase
+          </Text>
+          <Tooltip label="add tooltip message here" fontSize="md">
+            <span>
+              <Icon as={QuestionOutlineIcon} color="white" />
+            </span>
+          </Tooltip>
+        </HStack>
+
         <NdInput
           type="password"
           onChange={handlePassphraseInput}
