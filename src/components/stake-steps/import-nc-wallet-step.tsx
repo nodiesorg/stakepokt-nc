@@ -20,13 +20,25 @@ export type ImportNcWalletStepProps = {} & ForwardStepProps;
 function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
   const [nextStepEnabled, setNextStepEnabled] = useState(false);
   const [passphrase, setPassphrase] = useState("");
-  const [keyString, setKeyString] = useState<string>("");
+  const [keyString, setKeyString] = useState("");
   const [filePrompt, setUploadFilePrompt] = useState(
     "Click here or drag and drop your keyfile json."
   );
+  const [passphraseError, setPassphraseError] = useState<string | null>(null);
+
   const handlePassphraseInput = (event: ChangeEvent<HTMLInputElement>) => {
     setPassphrase(event.target.value);
   };
+
+  useEffect(() => {
+    if (passphrase.length > 0) {
+      setPassphraseError("");
+      if (keyString.length > 0) setNextStepEnabled(true);
+    } else {
+      if (passphraseError === null) return;
+      setPassphraseError("passphrase invalid");
+    }
+  }, [passphrase, keyString, passphraseError]);
 
   const finishStep = async () => {
     try {
@@ -38,9 +50,7 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
         wallet: importedWallet,
       });
     } catch (e) {
-      setUploadFilePrompt(
-        `${filePrompt}, PPK malformed or passphrase invalid.`
-      );
+      setUploadFilePrompt(`${filePrompt}, PPK malformed.`);
     }
   };
 
@@ -49,10 +59,6 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
       finishStep();
     }
   };
-
-  useEffect(() => {
-    setNextStepEnabled(passphrase.length > 0 && keyString.length > 0);
-  }, [passphrase, keyString]);
 
   const onKeyFileAdded = (e: File[]) => {
     const keyFile = e[0];
@@ -78,7 +84,11 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
           <Text color="white" margin="1rem 0">
             Passphrase
           </Text>
-          <Tooltip label="add tooltip message here" fontSize="md">
+          <Tooltip
+            label="add tooltip message here"
+            fontSize="md"
+            closeOnClick={false}
+          >
             <span>
               <Icon as={QuestionOutlineIcon} color="white" />
             </span>
@@ -86,15 +96,19 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
         </HStack>
 
         <NdInput
-          type="password"
           onChange={handlePassphraseInput}
           onKeyDown={handleEnterPassphrase}
+          type="password"
           value={passphrase}
+          errorMessage={passphraseError}
         />
         <NDDropzone
           onDrop={onKeyFileAdded}
           acceptedFileType="json"
           prompt={filePrompt}
+          isError={
+            filePrompt.includes("malformed") || filePrompt.includes("try again")
+          }
         />
       </Box>
       <Flex width="100%" justify="flex-end">

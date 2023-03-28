@@ -1,4 +1,4 @@
-import {Accept, useDropzone} from "react-dropzone";
+import { Accept, useDropzone } from "react-dropzone";
 import { Box, Text } from "@chakra-ui/react";
 
 type DropdownFileTypes = "ppk" | "csv" | "txt" | "json";
@@ -6,7 +6,8 @@ type DropdownFileTypes = "ppk" | "csv" | "txt" | "json";
 type NDDropzoneProps = {
   onDrop: (acceptedFiles: any) => void;
   prompt: string;
-  acceptedFileType: DropdownFileTypes
+  acceptedFileType: DropdownFileTypes;
+  isError: boolean;
 };
 
 function transformDropzoneAcceptType(fileType: DropdownFileTypes): Accept {
@@ -14,15 +15,18 @@ function transformDropzoneAcceptType(fileType: DropdownFileTypes): Accept {
     case "ppk":
     case "txt":
     case "csv":
-      return {'text/csv': [`.${fileType}`]}
+      return { "text/csv": [`.${fileType}`] };
     default:
-      return {'application/json': [`.${fileType}`]}
+      return { "application/json": [`.${fileType}`] };
   }
 }
 
-const NDDropzone = ({ onDrop, acceptedFileType, prompt }: NDDropzoneProps) => {
-
-
+const NDDropzone = ({
+  onDrop,
+  acceptedFileType,
+  prompt,
+  isError,
+}: NDDropzoneProps) => {
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     multiple: false,
@@ -34,7 +38,8 @@ const NDDropzone = ({ onDrop, acceptedFileType, prompt }: NDDropzoneProps) => {
       <Box
         {...getRootProps()}
         backgroundColor="#363D63"
-        border="1px dashed white"
+        border="1px dashed"
+        borderColor={isError ? "#FC8181" : "white"}
         borderRadius="8px"
         color="White"
         cursor="pointer"

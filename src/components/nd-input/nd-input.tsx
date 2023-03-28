@@ -10,10 +10,10 @@ import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 interface NdInputProps extends InputProps {
-  errorMessage?: string;
+  errorMessage?: string | null;
 }
 
-function NdInput({ errorMessage = "", type, ...restProps }: NdInputProps) {
+function NdInput({ errorMessage = null, type, ...restProps }: NdInputProps) {
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [inputType, setInputType] = useState("");
   const isError = !!errorMessage;
