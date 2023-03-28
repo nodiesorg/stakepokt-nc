@@ -134,8 +134,7 @@ function SetStakeAmountStep({
     });
   };
 
-  // if (!wallet)
-  //     return <></>
+  if (!wallet) return <></>;
 
   return (
     <Box>
@@ -162,7 +161,11 @@ function SetStakeAmountStep({
           <Text color="white" margin="1rem 0">
             Stake Amount Per Node
           </Text>
-          <Tooltip label="add tooltip message here" fontSize="md">
+          <Tooltip
+            label="add tooltip message here"
+            fontSize="md"
+            closeOnClick={false}
+          >
             <span>
               <Icon as={QuestionOutlineIcon} color="white" />
             </span>
@@ -178,7 +181,11 @@ function SetStakeAmountStep({
           <Text color="white" margin="1rem 0">
             Additional Transfer Amount Per Node
           </Text>
-          <Tooltip label="add tooltip message here" fontSize="md">
+          <Tooltip
+            label="add tooltip message here"
+            fontSize="md"
+            closeOnClick={false}
+          >
             <span>
               <Icon as={QuestionOutlineIcon} color="white" />
             </span>
@@ -194,7 +201,11 @@ function SetStakeAmountStep({
           <Text color="white" margin="1rem 0">
             Non Custodial Address
           </Text>
-          <Tooltip label="add tooltip message here" fontSize="md">
+          <Tooltip
+            label="add tooltip message here"
+            fontSize="md"
+            closeOnClick={false}
+          >
             <span>
               <Icon as={QuestionOutlineIcon} color="white" />
             </span>
