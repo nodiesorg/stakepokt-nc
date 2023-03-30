@@ -74,8 +74,9 @@ export default function Home() {
     <>
       <Head>
         <title>Nodies - Non Custodial Staking Tool</title>
+        <meta name="description" content="insert description here" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" />
       </Head>
 
       <Box as="main" minHeight="100vh">
