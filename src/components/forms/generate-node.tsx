@@ -23,16 +23,33 @@ function GenerateNodeForm() {
           fontWeight={500}
           textAlign="center"
         >
-          Node Operator Key-Gen Tool
+          Node Operator Keygen Tool
         </Heading>
       </CardHeader>
 
-      <HStack>
+        <HStack>
+            <Text color="white" margin="1rem 0">
+                Enter customer name/alias
+            </Text>
+            <Tooltip
+                label="This will prefix your nodes with the specified alias."
+                fontSize="md"
+                closeOnClick={false}
+            >
+          <span>
+            <Icon as={QuestionOutlineIcon} color="white" />
+          </span>
+            </Tooltip>
+        </HStack>
+        <NdInput onChange={() => console.log("onChangeHandler")} type="text" />
+
+
+        <HStack>
         <Text color="white" margin="1rem 0">
           Enter number of nodes to generate
         </Text>
         <Tooltip
-          label="add tooltip message here"
+          label="This is the amount of nodes that you will operate for your client"
           fontSize="md"
           closeOnClick={false}
         >
@@ -48,7 +65,7 @@ function GenerateNodeForm() {
           Enter the chains
         </Text>
         <Tooltip
-          label="add tooltip message here"
+          label="This is the chains that will be staked for your client. This is optional and you can change it later with another stake tx."
           fontSize="md"
           closeOnClick={false}
         >
