@@ -1,30 +1,26 @@
 import { useState } from "react";
-import Link from "next/link";
+
 import Head from "next/head";
 import {
   Box,
   Card,
-  CardBody,
-  CardHeader,
   Container,
   Flex,
-  Heading,
   HStack,
   Image,
   Text,
+  Link,
 } from "@chakra-ui/react";
 
-import { Step, Steps, useSteps } from "chakra-ui-steps";
+import { useSteps } from "chakra-ui-steps";
 
-import PerformStakeStep from "@/components/stake-steps/perform-stake-step";
-import ImportNcWalletStep from "@/components/stake-steps/import-nc-wallet-step";
-import ImportNodeKeysStep from "@/components/stake-steps/import-node-keys-step";
-import SetStakeAmountStep from "@/components/stake-steps/set-stake-amount-step";
+import StakeNodeForm from "@/components/forms/stake-node";
+import GenerateNodeForm from "@/components/forms/generate-node";
 
-import {
-  DefaultStakeForm,
-  StakeForm,
-} from "@/components/stake-steps/stake-form";
+const FORMS = {
+  STAKE: "STAKE",
+  GENERATE: "GENERATE",
+};
 
 const stepMetadata = [
   {
@@ -42,6 +38,7 @@ const stepMetadata = [
 ];
 
 export default function Home() {
+  const [form, setForm] = useState(FORMS.STAKE);
   const {
     nextStep: goToNextStep,
     prevStep: goToPrevStep,
@@ -49,26 +46,6 @@ export default function Home() {
   } = useSteps({
     initialStep: 0,
   });
-
-  const [stakeForm, setStakeForm] = useState<StakeForm>({
-    ...DefaultStakeForm,
-  });
-
-  const handleOnNextStep = (updatedForm: StakeForm) => {
-    // update form keys
-    Object.keys(updatedForm).forEach((key: string) =>
-      // @ts-ignore
-      updatedForm[key] === undefined ? delete updatedForm[key] : {}
-    );
-    setStakeForm((prevState) => {
-      return {
-        ...prevState,
-        ...updatedForm,
-      };
-    });
-    // Move to next step
-    goToNextStep();
-  };
 
   return (
     <>
@@ -79,8 +56,19 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" />
       </Head>
 
+      {/* Nav */}
       <Box as="main" minHeight="100vh">
-        <Flex alignItems="center" minHeight="100vh">
+        <Flex
+          backgroundColor="#1B1E30"
+          padding="1rem 2rem"
+          justifyContent="flex-end"
+        >
+          <HStack color="white" padding=".5rem 1rem" spacing={5}>
+            <Link onClick={() => setForm(FORMS.STAKE)}>Stake Nodes</Link>
+            <Link onClick={() => setForm(FORMS.GENERATE)}>Generate Nodes</Link>
+          </HStack>
+        </Flex>
+        <Flex minHeight="100vh">
           <Container
             maxWidth={activeStep === stepMetadata.length - 1 ? "5xl" : "3xl"}
             height="100%"
@@ -88,47 +76,15 @@ export default function Home() {
           >
             {/* Multistep card */}
             <Card backgroundColor="#1B1E30">
-              <CardBody>
-                <CardHeader>
-                  <Heading
-                    color="white"
-                    fontFamily="Poppins"
-                    fontSize="24px"
-                    fontWeight={500}
-                    textAlign="center"
-                  >
-                    {activeStep < stepMetadata.length &&
-                      stepMetadata[activeStep].headerTitle}
-                  </Heading>
-                </CardHeader>
-                <Steps
+              {form === FORMS.STAKE ? (
+                <StakeNodeForm
                   activeStep={activeStep}
-                  orientation="horizontal"
-                  margin="3rem 0"
-                >
-                  <Step label={""} key={0}>
-                    <ImportNcWalletStep onNextStep={handleOnNextStep} />
-                  </Step>
-                  <Step label={""} key={1}>
-                    <ImportNodeKeysStep
-                      onNextStep={handleOnNextStep}
-                      onPrevStep={goToPrevStep}
-                    />
-                  </Step>
-                  <Step label={""} key={2}>
-                    <SetStakeAmountStep
-                      wallet={stakeForm.wallet}
-                      importedNodes={stakeForm.nodesToStake}
-                      onNextStep={handleOnNextStep}
-                      onPrevStep={goToPrevStep}
-                    />
-                  </Step>
-                  <Step label={""} key={3}>
-                    <PerformStakeStep stakeForm={stakeForm} />
-                  </Step>
-                </Steps>
-                )
-              </CardBody>
+                  goToNextStep={goToNextStep}
+                  goToPrevStep={goToPrevStep}
+                />
+              ) : (
+                <GenerateNodeForm />
+              )}
             </Card>
 
             {/* Footer */}
