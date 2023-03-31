@@ -85,7 +85,7 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
             Passphrase
           </Text>
           <Tooltip
-            label="add tooltip message here"
+            label="This is the passphrase to decrypt your file when you created it on wallet.pokt.network"
             fontSize="md"
             closeOnClick={false}
           >

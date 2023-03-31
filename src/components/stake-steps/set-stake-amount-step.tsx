@@ -162,7 +162,7 @@ function SetStakeAmountStep({
             Stake Amount Per Node
           </Text>
           <Tooltip
-            label="add tooltip message here"
+            label="This is the amount of POKT each one of your nodes will stake"
             fontSize="md"
             closeOnClick={false}
           >
@@ -182,7 +182,7 @@ function SetStakeAmountStep({
             Additional Transfer Amount Per Node
           </Text>
           <Tooltip
-            label="add tooltip message here"
+            label="This is the amount of POKT each one of your nodes will keep in its balance to pay for TX fees"
             fontSize="md"
             closeOnClick={false}
           >
@@ -202,7 +202,7 @@ function SetStakeAmountStep({
             Non Custodial Address
           </Text>
           <Tooltip
-            label="add tooltip message here"
+            label="This is the non custodial wallet address your nodes will stake to, the default value is your wallet address."
             fontSize="md"
             closeOnClick={false}
           >
