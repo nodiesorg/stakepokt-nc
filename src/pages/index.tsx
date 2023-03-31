@@ -17,9 +17,9 @@ import { useSteps } from "chakra-ui-steps";
 import StakeNodeForm from "@/components/forms/stake-node";
 import GenerateNodeForm from "@/components/forms/generate-node";
 
-const FORMS = {
-  STAKE: "STAKE",
-  GENERATE: "GENERATE",
+enum Form {
+  STAKE_NODES = "STAKE_NODES",
+  GENERATE_NODES ="GENERATE_NODES"
 };
 
 const stepMetadata = [
@@ -38,7 +38,7 @@ const stepMetadata = [
 ];
 
 export default function Home() {
-  const [form, setForm] = useState(FORMS.STAKE);
+  const [form, setForm] = useState<Form>(Form.STAKE_NODES);
   const {
     nextStep: goToNextStep,
     prevStep: goToPrevStep,
@@ -64,8 +64,8 @@ export default function Home() {
           justifyContent="flex-end"
         >
           <HStack color="white" padding=".5rem 1rem" spacing={5}>
-            <Link onClick={() => setForm(FORMS.STAKE)}>Stake Nodes</Link>
-            <Link onClick={() => setForm(FORMS.GENERATE)}>Generate Nodes</Link>
+            <Link onClick={() => setForm(Form.STAKE_NODES)}>Stake Nodes</Link>
+            <Link onClick={() => setForm(Form.GENERATE_NODES)}>Generate Nodes</Link>
           </HStack>
         </Flex>
         <Flex minHeight="100vh">
@@ -76,7 +76,7 @@ export default function Home() {
           >
             {/* Multistep card */}
             <Card backgroundColor="#1B1E30">
-              {form === FORMS.STAKE ? (
+              {form === Form.STAKE_NODES ? (
                 <StakeNodeForm
                   activeStep={activeStep}
                   goToNextStep={goToNextStep}
