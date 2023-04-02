@@ -94,6 +94,7 @@ export default function Home() {
                 <Text color="#737682" fontFamily="Poppins" fontSize="12px">
                   Created by
                 </Text>
+                <Link href="https://nodies.org" target="_blank">
                 <Image
                   src="/images/nodies.svg"
                   alt="Nodies"
@@ -101,6 +102,7 @@ export default function Home() {
                   height="auto"
                   margin=".5rem auto 0"
                 />
+                </Link>
               </Box>
               {/* Subfooter */}
               <Box color="white" display="flex" justifyContent="space-between">
@@ -111,10 +113,10 @@ export default function Home() {
                   <Link href="https://github.com/baaspoolsllc" target="_blank">
                     <Image src="/images/github.svg" alt="github" />
                   </Link>
-                  <Link href="https://www.nodies.org/" target="_blank">
+                  <Link href="https://discord.gg/pokt" target="_blank">
                     <Image src="/images/discord.svg" alt="discord" />
                   </Link>
-                  <Link href="https://www.nodies.org/" target="_blank">
+                  <Link href="https://twitter.com/PoktFund" target="_blank">
                     <Image src="/images/twitter.svg" alt="twitter" />
                   </Link>
                 </HStack>
