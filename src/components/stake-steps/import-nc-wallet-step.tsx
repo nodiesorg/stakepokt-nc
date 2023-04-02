@@ -45,7 +45,7 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                 wallet: importedWallet,
             });
         } catch (e: any) {
-            if(!e.message.includes("Unsupported state or unable to authenticate data") && filePrompt.includes("PPK malformed")) {
+            if(!e.message.includes("Unsupported state or unable to authenticate data") && !filePrompt.includes("PPK malformed")) {
                 setUploadFilePrompt(`${filePrompt}, PPK malformed.`);
                 return
             }
