@@ -18,6 +18,8 @@ import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
 export type ImportNcWalletStepProps = {} & ForwardStepProps;
 
 const INVALID_PASSPHRASE_KEYFILE_ERR = "Unsupported state or unable to authenticate data"
+const MALFORMED_KEYFILE_ERR = "Malformed PPK"
+
 function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
     const [nextStepEnabled, setNextStepEnabled] = useState(false);
     const [passphrase, setPassphrase] = useState("");
@@ -45,8 +47,8 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                 wallet: importedWallet,
             });
         } catch (e: any) {
-            if(!e.message.includes("Unsupported state or unable to authenticate data") && !filePrompt.includes("PPK malformed")) {
-                setUploadFilePrompt(`${filePrompt}, PPK malformed.`);
+            if(!e.message.includes("Unsupported state or unable to authenticate data") && !filePrompt.includes(MALFORMED_KEYFILE_ERR)) {
+                setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
                 return
             }
             setPassphraseError(INVALID_PASSPHRASE_KEYFILE_ERR)
@@ -62,8 +64,8 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
     const onKeyFileAdded = (e: File[]) => {
         const keyFile = e[0];
         const reader = new FileReader();
-        reader.onabort = () => setUploadFilePrompt("json read aborted, try again");
-        reader.onerror = () => setUploadFilePrompt("json read error, try again");
+        reader.onabort = () => setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
+        reader.onerror = () => setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
         reader.onload = async () => {
             setUploadFilePrompt(`Selected file: ${keyFile.name}`);
             setKeyString(reader.result as string);
