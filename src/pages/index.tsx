@@ -50,7 +50,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Nodies - Non Custodial Staking Tool</title>
+        <title>StakePokt - Non Custodial Staking Tool</title>
         <meta name="description" content="A tool inspired to make your life easier by performing bulk non-custodial stakes with minimal effort for both node operators and stakers." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
