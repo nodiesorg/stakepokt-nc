@@ -1,12 +1,16 @@
 import {TxMsg} from "@/internal/pocket-js-2.1.1/packages/transaction-builder";
 
 export type ImportedNcNode = {
-    nodeAlias: string;
+    node_alias: string;
     address: string;
-    publicKey: string;
+    pub_key: string;
     domain?: string;
     chains?: string[];
 }
+
+export type PrivateNcNode = {
+    priv_key:string;
+} & ImportedNcNode
 
 class StakableNode {
 

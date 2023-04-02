@@ -112,7 +112,7 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
                 });
             }
             const stakeTxMsg = tb.nodeStake({
-                nodePubKey: w.publicKey,
+                nodePubKey: w.pub_key,
                 chains: w.chains != undefined && w.chains.length > 0 ? w.chains : ["0001"],
                 serviceURL: w.domain != undefined ? new URL(w.domain) : new URL('https://parked.com'),
                 amount: stakeAmountUPokt.getValue(),

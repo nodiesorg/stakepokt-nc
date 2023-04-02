@@ -33,7 +33,7 @@ const ppkAccount = await KeyManager.fromPPK({ password: process.env.PASS, ppk: p
 const address = account.getAddress()
 
 // Get your public key 
-const publicKey = account.getPublicKey()
+const pub_key = account.getPublicKey()
 
 // Sign a message
 const signedCoffee = account.sign("0xcafe")
@@ -53,7 +53,7 @@ The address of the account to instanciate manually.
 - type: 'String'
 The private key of the account to instanciate manually.
 
-#### publicKey
+#### pub_key
 - type: 'String'
 The public key of the account to instanciate manually.
 

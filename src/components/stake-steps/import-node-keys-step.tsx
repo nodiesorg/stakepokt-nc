@@ -51,17 +51,17 @@ function ImportNodeKeysStep({
         let chains: string[] | undefined;
 
         if (c.length == 4) {
-          domain = c[4].trim();
+          domain = c[3].trim();
         }
 
         if (c.length == 5) {
-          chains = c[5].split(",").map((s) => s.trim());
+          chains = c[4].split(",").map((s) => s.trim());
           if (chains.length == 0) return undefined;
         }
 
         return {
-          nodeAlias,
-          publicKey,
+          node_alias: nodeAlias,
+          pub_key: publicKey,
           address,
           domain,
           chains,

@@ -41,7 +41,7 @@ const balance = await provider.getBalance(
 export const signer = await KeyManager.fromPrivateKey(process.env.PRIVATE_KEY);
 
 const address = signer.getAddress();
-const publicKey = signer.getPublicKey();
+const pub_key = signer.getPublicKey();
 const signedMessage = signer.sign("deadbeef");
 
 // Instantiate a new TransactionBuilder for creating transaction messages and

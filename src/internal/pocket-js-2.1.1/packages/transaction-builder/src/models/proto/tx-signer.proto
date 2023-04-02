@@ -12,7 +12,7 @@ message ProtoStdTx {
 }
 
 message ProtoStdSignature {
-    bytes publicKey = 1;
+    bytes pub_key = 1;
     bytes Signature = 2;
 }
 
