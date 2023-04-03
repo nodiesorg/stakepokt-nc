@@ -1,5 +1,5 @@
-import {ChangeEvent, useEffect, useState} from "react";
-import {QuestionOutlineIcon} from "@chakra-ui/icons";
+import { ChangeEvent, useEffect, useState } from 'react'
+import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import {
     Button,
     CardBody,
@@ -11,43 +11,46 @@ import {
     Icon,
     Text,
     Tooltip,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
-import NdInput from "../nd-input/nd-input";
-import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
-import {PrivateNcNode} from "@/internal/pokt-types/imported-nc-node";
-import {downloadFile} from "@/internal/local-downloader/downloader";
+import NdInput from '../nd-input/nd-input'
+import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
+import { PrivateNcNode } from '@/internal/pokt-types/imported-nc-node'
+import { downloadFile } from '@/internal/local-downloader/downloader'
 
 const INTEGER_ONLY_REGEX = /^\d+$/
-const CUSTOMER_DEFAULT_ALIAS = "customer"
+const CUSTOMER_DEFAULT_ALIAS = 'customer'
 
 function GenerateNodeForm() {
+    const [formComplete, setFormComplete] = useState(false)
+    const [isEnableChains, setIsEnableChains] = useState(false)
 
-    const [formComplete, setFormComplete] = useState(false);
-    const [isEnableChains, setIsEnableChains] = useState(false);
+    const [customerAlias, setCustomerAlias] = useState<string>('')
 
-    const [customerAlias, setCustomerAlias] = useState<string>("");
+    const [nodesCountText, setNodeCountText] = useState<string>('1')
+    const [nodesCountErr, setNodesCountErr] = useState<string | null>(null)
 
-    const [nodesCountText, setNodeCountText] = useState<string>("1");
-    const [nodesCountErr, setNodesCountErr] = useState<string | null>(null);
-
-    const [chainsText, setChainsText] = useState("0001");
-    const [chainsTextErr, setChainsTextErr] = useState<string | null>(null);
+    const [chainsText, setChainsText] = useState('0001')
+    const [chainsTextErr, setChainsTextErr] = useState<string | null>(null)
 
     const handleChainsInput = (event: ChangeEvent<HTMLInputElement>) => {
-        setChainsText(event.target.value);
+        setChainsText(event.target.value)
     }
 
     const handleFormSubmission = async () => {
         const nodes = []
         for (let i = 0; i < parseInt(nodesCountText); i++) {
-            nodes.push(await KeyManager.createRandom());
+            nodes.push(await KeyManager.createRandom())
         }
 
-        const aliasOrDefault = customerAlias.length > 0 ? customerAlias : CUSTOMER_DEFAULT_ALIAS;
+        const aliasOrDefault =
+            customerAlias.length > 0 ? customerAlias : CUSTOMER_DEFAULT_ALIAS
 
-        let publicNodesCsvData = "alias,pubKey,address,domain,chains";
-        nodes.forEach((s: KeyManager, i) => publicNodesCsvData += `\n${aliasOrDefault}-${i},${s.getPublicKey()},${s.getAddress()},,${chainsText}`)
+        let publicNodesCsvData = 'alias,pubKey,address,domain,chains'
+        nodes.forEach(
+            (s: KeyManager, i) =>
+                (publicNodesCsvData += `\n${aliasOrDefault}-${i},${s.getPublicKey()},${s.getAddress()},,${chainsText}`)
+        )
 
         let privateNodes: PrivateNcNode[] = nodes.map((s, i) => ({
             priv_key: s.getPrivateKey(),
@@ -60,47 +63,52 @@ function GenerateNodeForm() {
         downloadFile({
             data: JSON.stringify(privateNodes, null, 4),
             fileName: `${fileToSavePrefix}_private_do_not_distribute.json`,
-            mimeType: "text/json"
+            mimeType: 'text/json',
         })
 
         downloadFile({
             data: publicNodesCsvData,
             fileName: `${fileToSavePrefix}_public.csv`,
-            mimeType: "text/csv"
+            mimeType: 'text/csv',
         })
     }
 
     const handleNodeCount = (event: ChangeEvent<HTMLInputElement>) => {
-        const inputString = event.target.value;
+        const inputString = event.target.value
         if (inputString.length > 0 && !INTEGER_ONLY_REGEX.test(inputString))
-            return;
-        setNodeCountText(inputString);
+            return
+        setNodeCountText(inputString)
     }
 
     useEffect(() => {
-        const chains = chainsText.split(",");
+        const chains = chainsText.split(',')
         if (chains.length == 0 && chainsText.length > 1) {
             setChainsTextErr(`Add at least one chain (i.e 0001)`)
-            return;
+            return
         }
-        const invalidChain = chains.find(s => s.length != 4)
+        const invalidChain = chains.find((s) => s.length != 4)
         if (invalidChain) {
             setChainsTextErr(`Invalid Chain ${invalidChain}`)
-            return;
+            return
         }
-        setChainsTextErr(null);
+        setChainsTextErr(null)
     }, [chainsText])
 
     useEffect(() => {
-        if (nodesCountText !== "0") {
-            setNodesCountErr(null);
-            return;
+        if (nodesCountText !== '0') {
+            setNodesCountErr(null)
+            return
         }
-        setNodesCountErr("Node count must be more than zero");
+        setNodesCountErr('Node count must be more than zero')
     }, [nodesCountText])
 
     useEffect(() => {
-        setFormComplete(nodesCountText.length > 0 && chainsText.length > 0 && nodesCountErr == null && chainsTextErr == null);
+        setFormComplete(
+            nodesCountText.length > 0 &&
+                chainsText.length > 0 &&
+                nodesCountErr == null &&
+                chainsTextErr == null
+        )
     }, [nodesCountText, chainsText, chainsTextErr, nodesCountErr])
 
     return (
@@ -126,13 +134,15 @@ function GenerateNodeForm() {
                     fontSize="md"
                     closeOnClick={false}
                 >
-          <span>
-            <Icon as={QuestionOutlineIcon} color="white"/>
-          </span>
+                    <span>
+                        <Icon as={QuestionOutlineIcon} color="white" />
+                    </span>
                 </Tooltip>
             </HStack>
-            <NdInput onChange={(e) => setCustomerAlias(e.target.value)} type="text"/>
-
+            <NdInput
+                onChange={(e) => setCustomerAlias(e.target.value)}
+                type="text"
+            />
 
             <HStack>
                 <Text color="white" margin="1rem 0">
@@ -143,12 +153,17 @@ function GenerateNodeForm() {
                     fontSize="md"
                     closeOnClick={false}
                 >
-          <span>
-            <Icon as={QuestionOutlineIcon} color="white"/>
-          </span>
+                    <span>
+                        <Icon as={QuestionOutlineIcon} color="white" />
+                    </span>
                 </Tooltip>
             </HStack>
-            <NdInput value={nodesCountText} errorMessage={nodesCountErr} onChange={handleNodeCount} type="text"/>
+            <NdInput
+                value={nodesCountText}
+                errorMessage={nodesCountErr}
+                onChange={handleNodeCount}
+                type="text"
+            />
 
             {/* Enter the chains */}
             <HStack>
@@ -160,9 +175,9 @@ function GenerateNodeForm() {
                     fontSize="md"
                     closeOnClick={false}
                 >
-          <span>
-            <Icon as={QuestionOutlineIcon} color="white"/>
-          </span>
+                    <span>
+                        <Icon as={QuestionOutlineIcon} color="white" />
+                    </span>
                 </Tooltip>
             </HStack>
             <NdInput
@@ -170,7 +185,6 @@ function GenerateNodeForm() {
                 type="text"
                 errorMessage={chainsTextErr}
                 value={chainsText}
-
                 isDisabled={!isEnableChains}
             />
             <Checkbox
@@ -188,13 +202,13 @@ function GenerateNodeForm() {
                     backgroundColor="#5C58FF"
                     onClick={handleFormSubmission}
                     size="lg"
-                    _hover={{backgroundColor: "#5C58FF"}}
+                    _hover={{ backgroundColor: '#5C58FF' }}
                 >
                     Generate Nodes
                 </Button>
             </Flex>
         </CardBody>
-    );
+    )
 }
 
-export default GenerateNodeForm;
+export default GenerateNodeForm

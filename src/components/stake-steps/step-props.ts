@@ -1,9 +1,9 @@
-import {StakeForm} from "@/components/stake-steps/stake-form";
+import { StakeForm } from '@/components/stake-steps/stake-form'
 
 export type ForwardStepProps = {
-    onNextStep: (updatedForm: StakeForm) => void;
+    onNextStep: (updatedForm: StakeForm) => void
 }
 
 export type BidirectionalStepProps = {
     onPrevStep: () => void
-} & ForwardStepProps;
+} & ForwardStepProps

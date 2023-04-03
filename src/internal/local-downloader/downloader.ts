@@ -1,8 +1,7 @@
-
 export type DownloadProps = {
-    data: any;
-    fileName:string;
-    mimeType:string;
+    data: any
+    fileName: string
+    mimeType: string
 }
 export const downloadFile = ({ data, fileName, mimeType }: DownloadProps) => {
     // Create a blob with the data we want to download as a file

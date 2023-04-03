@@ -8,17 +8,19 @@ All transaction generation and signing is performed within your browser locally.
 ## Getting Started
 
 ### Dependencies
-* [pnpm](https://pnpm.io/)
-* [pocket-js](https://github.com/pokt-foundation/pocket-js)
-* [Next](https://next.js)
 
+-   [pnpm](https://pnpm.io/)
+-   [pocket-js](https://github.com/pokt-foundation/pocket-js)
+-   [Next](https://next.js)
 
 First, install node dependencies
+
 ```bash
 pnpm i
 ```
 
 Second, open up
+
 ```bash
 https://localhost:3000
 ```

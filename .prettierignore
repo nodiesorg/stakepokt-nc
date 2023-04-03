@@ -1,0 +1,6 @@
+node_modules
+# Ignore artifacts:
+build
+coverage
+.next
+src/internal/pocket-js-2.1.1

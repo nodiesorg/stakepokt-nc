@@ -1,6 +1,6 @@
-import {useState} from "react";
+import { useState } from 'react'
 
-import Head from "next/head";
+import Head from 'next/head'
 import {
     Box,
     Card,
@@ -10,51 +10,56 @@ import {
     Image,
     Text,
     Link,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react'
 
-import {useSteps} from "chakra-ui-steps";
+import { useSteps } from 'chakra-ui-steps'
 
-import StakeNodeForm from "@/components/forms/stake-node";
-import GenerateNodeForm from "@/components/forms/generate-node";
+import StakeNodeForm from '@/components/forms/stake-node'
+import GenerateNodeForm from '@/components/forms/generate-node'
 
 enum Form {
-    STAKE_NODES = "STAKE_NODES",
-    GENERATE_NODES = "GENERATE_NODES"
-};
+    STAKE_NODES = 'STAKE_NODES',
+    GENERATE_NODES = 'GENERATE_NODES',
+}
 
 const stepMetadata = [
     {
-        headerTitle: "Non Custodial Staking Tool",
+        headerTitle: 'Non Custodial Staking Tool',
     },
     {
-        headerTitle: "Import Node Keys",
+        headerTitle: 'Import Node Keys',
     },
     {
-        headerTitle: "Set Stake Distribution",
+        headerTitle: 'Set Stake Distribution',
     },
     {
-        headerTitle: "Staking results",
+        headerTitle: 'Staking results',
     },
-];
+]
 
 export default function Home() {
-    const [form, setForm] = useState<Form>(Form.STAKE_NODES);
+    const [form, setForm] = useState<Form>(Form.STAKE_NODES)
     const {
         nextStep: goToNextStep,
         prevStep: goToPrevStep,
         activeStep,
     } = useSteps({
         initialStep: 0,
-    });
+    })
 
     return (
         <>
             <Head>
                 <title>StakePokt - Non Custodial Staking Tool</title>
-                <meta name="description"
-                      content="A tool inspired to make your life easier by performing bulk non-custodial stakes with minimal effort for both node operators and stakers."/>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="icon" href="/favicon.png"/>
+                <meta
+                    name="description"
+                    content="A tool inspired to make your life easier by performing bulk non-custodial stakes with minimal effort for both node operators and stakers."
+                />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <link rel="icon" href="/favicon.png" />
             </Head>
 
             {/* Nav */}
@@ -65,18 +70,28 @@ export default function Home() {
                     justifyContent="flex-end"
                 >
                     <HStack color="white" padding=".5rem 1rem" spacing={5}>
-                        <Link onClick={() => {
-                            if (activeStep == stepMetadata.length - 1) // is on last step of form then reload the page to reset state(s)
-                                window.location.reload()
-                            else
-                                setForm(Form.STAKE_NODES)
-                        }}>Stake Nodes</Link>
-                        <Link onClick={() => setForm(Form.GENERATE_NODES)}>Generate Nodes</Link>
+                        <Link
+                            onClick={() => {
+                                if (activeStep == stepMetadata.length - 1)
+                                    // is on last step of form then reload the page to reset state(s)
+                                    window.location.reload()
+                                else setForm(Form.STAKE_NODES)
+                            }}
+                        >
+                            Stake Nodes
+                        </Link>
+                        <Link onClick={() => setForm(Form.GENERATE_NODES)}>
+                            Generate Nodes
+                        </Link>
                     </HStack>
                 </Flex>
                 <Flex minHeight="100vh">
                     <Container
-                        maxWidth={activeStep === stepMetadata.length - 1 ? "5xl" : "3xl"}
+                        maxWidth={
+                            activeStep === stepMetadata.length - 1
+                                ? '5xl'
+                                : '3xl'
+                        }
                         height="100%"
                         padding="2rem"
                     >
@@ -89,7 +104,7 @@ export default function Home() {
                                     goToPrevStep={goToPrevStep}
                                 />
                             ) : (
-                                <GenerateNodeForm/>
+                                <GenerateNodeForm />
                             )}
                         </Card>
 
@@ -97,7 +112,11 @@ export default function Home() {
                         <Box as="footer">
                             {/* Powered by Nodies */}
                             <Box margin="2rem 0" textAlign="center">
-                                <Text color="#737682" fontFamily="Poppins" fontSize="12px">
+                                <Text
+                                    color="#737682"
+                                    fontFamily="Poppins"
+                                    fontSize="12px"
+                                >
                                     Created by
                                 </Text>
                                 <Link href="https://nodies.org" target="_blank">
@@ -111,19 +130,42 @@ export default function Home() {
                                 </Link>
                             </Box>
                             {/* Subfooter */}
-                            <Box color="white" display="flex" justifyContent="space-between">
+                            <Box
+                                color="white"
+                                display="flex"
+                                justifyContent="space-between"
+                            >
                                 <Text fontSize="12px">
-                                    &copy; {new Date().getFullYear()} BaaS Pools LLC
+                                    &copy; {new Date().getFullYear()} BaaS Pools
+                                    LLC
                                 </Text>
                                 <HStack>
-                                    <Link href="https://github.com/baaspoolsllc" target="_blank">
-                                        <Image src="/images/github.svg" alt="github"/>
+                                    <Link
+                                        href="https://github.com/baaspoolsllc"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/github.svg"
+                                            alt="github"
+                                        />
                                     </Link>
-                                    <Link href="https://discord.gg/pokt" target="_blank">
-                                        <Image src="/images/discord.svg" alt="discord"/>
+                                    <Link
+                                        href="https://discord.gg/pokt"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/discord.svg"
+                                            alt="discord"
+                                        />
                                     </Link>
-                                    <Link href="https://twitter.com/PoktFund" target="_blank">
-                                        <Image src="/images/twitter.svg" alt="twitter"/>
+                                    <Link
+                                        href="https://twitter.com/PoktFund"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/twitter.svg"
+                                            alt="twitter"
+                                        />
                                     </Link>
                                 </HStack>
                             </Box>
@@ -132,5 +174,5 @@ export default function Home() {
                 </Flex>
             </Box>
         </>
-    );
+    )
 }

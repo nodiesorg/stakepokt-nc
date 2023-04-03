@@ -1,4 +1,4 @@
-import {ChangeEvent, KeyboardEvent, useEffect, useState} from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 import {
     Box,
     Button,
@@ -7,77 +7,85 @@ import {
     Tooltip,
     Icon,
     HStack,
-} from "@chakra-ui/react";
-import {QuestionOutlineIcon} from "@chakra-ui/icons";
+} from '@chakra-ui/react'
+import { QuestionOutlineIcon } from '@chakra-ui/icons'
 
-import NdInput from "@/components//nd-input/nd-input";
-import NDDropzone from "@/components//nd-dropzone/nd-dropzone";
-import {ForwardStepProps} from "@/components/stake-steps/step-props";
-import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
+import NdInput from '@/components//nd-input/nd-input'
+import NDDropzone from '@/components//nd-dropzone/nd-dropzone'
+import { ForwardStepProps } from '@/components/stake-steps/step-props'
+import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
 
-export type ImportNcWalletStepProps = {} & ForwardStepProps;
+export type ImportNcWalletStepProps = {} & ForwardStepProps
 
-const INVALID_PASSPHRASE_KEYFILE_ERR = "Unsupported state or unable to authenticate data"
-const MALFORMED_KEYFILE_ERR = "Malformed PPK"
+const INVALID_PASSPHRASE_KEYFILE_ERR =
+    'Unsupported state or unable to authenticate data'
+const MALFORMED_KEYFILE_ERR = 'Malformed PPK'
 
-function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
-    const [nextStepEnabled, setNextStepEnabled] = useState(false);
-    const [passphrase, setPassphrase] = useState("");
-    const [keyString, setKeyString] = useState("");
+function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
+    const [nextStepEnabled, setNextStepEnabled] = useState(false)
+    const [passphrase, setPassphrase] = useState('')
+    const [keyString, setKeyString] = useState('')
     const [filePrompt, setUploadFilePrompt] = useState(
-        "Click here or drag and drop your keyfile json."
-    );
-    const [passphraseError, setPassphraseError] = useState<string | null>(null);
+        'Click here or drag and drop your keyfile json.'
+    )
+    const [passphraseError, setPassphraseError] = useState<string | null>(null)
 
     const handlePassphraseInput = (event: ChangeEvent<HTMLInputElement>) => {
-        setPassphrase(event.target.value);
-    };
+        setPassphrase(event.target.value)
+    }
 
     useEffect(() => {
-        setNextStepEnabled(passphrase.length > 0 && keyString.length > 0);
-    }, [passphrase, keyString]);
+        setNextStepEnabled(passphrase.length > 0 && keyString.length > 0)
+    }, [passphrase, keyString])
 
     const finishStep = async () => {
         try {
             const importedWallet = await KeyManager.fromPPK({
                 password: passphrase,
                 ppk: keyString,
-            });
+            })
             onNextStep({
                 wallet: importedWallet,
-            });
+            })
         } catch (e: any) {
-            if(!e.message.includes("Unsupported state or unable to authenticate data") && !filePrompt.includes(MALFORMED_KEYFILE_ERR)) {
-                setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
+            if (
+                !e.message.includes(
+                    'Unsupported state or unable to authenticate data'
+                ) &&
+                !filePrompt.includes(MALFORMED_KEYFILE_ERR)
+            ) {
+                setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
                 return
             }
             setPassphraseError(INVALID_PASSPHRASE_KEYFILE_ERR)
         }
-    };
+    }
 
     const handleEnterPassphrase = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key == "Enter" && nextStepEnabled) {
-            finishStep();
+        if (e.key == 'Enter' && nextStepEnabled) {
+            finishStep()
         }
-    };
+    }
 
     const onKeyFileAdded = (e: File[]) => {
-        const keyFile = e[0];
-        const reader = new FileReader();
-        reader.onabort = () => setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
-        reader.onerror = () => setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`);
+        const keyFile = e[0]
+        const reader = new FileReader()
+        reader.onabort = () =>
+            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
+        reader.onerror = () =>
+            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
         reader.onload = async () => {
-            setUploadFilePrompt(`Selected file: ${keyFile.name}`);
-            setKeyString(reader.result as string);
-        };
-        reader.readAsText(keyFile);
-    };
+            setUploadFilePrompt(`Selected file: ${keyFile.name}`)
+            setKeyString(reader.result as string)
+        }
+        reader.readAsText(keyFile)
+    }
 
     return (
         <Box>
             <Text color="White" fontSize="20px" fontWeight="400">
-                Import your non custodial wallet keyfile, and enter the decryption
-                passphrase.
+                Import your non custodial wallet keyfile, and enter the
+                decryption passphrase.
             </Text>
 
             <Box margin="2rem 0">
@@ -90,9 +98,9 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                         fontSize="md"
                         closeOnClick={false}
                     >
-            <span>
-              <Icon as={QuestionOutlineIcon} color="white"/>
-            </span>
+                        <span>
+                            <Icon as={QuestionOutlineIcon} color="white" />
+                        </span>
                     </Tooltip>
                 </HStack>
 
@@ -108,7 +116,8 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                     acceptedFileType="json"
                     prompt={filePrompt}
                     isError={
-                        filePrompt.includes("malformed") || filePrompt.includes("try again")
+                        filePrompt.includes('malformed') ||
+                        filePrompt.includes('try again')
                     }
                 />
             </Box>
@@ -118,13 +127,13 @@ function ImportNcWalletStep({onNextStep}: ImportNcWalletStepProps) {
                     onClick={finishStep}
                     isDisabled={!nextStepEnabled}
                     size="lg"
-                    _hover={{backgroundColor: "#5C58FF"}}
+                    _hover={{ backgroundColor: '#5C58FF' }}
                 >
-                    {"Next"}
+                    {'Next'}
                 </Button>
             </Flex>
         </Box>
-    );
+    )
 }
 
-export default ImportNcWalletStep;
+export default ImportNcWalletStep
