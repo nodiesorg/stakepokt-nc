@@ -24,3 +24,6 @@ Second, open up
 ```bash
 https://localhost:3000
 ```
+
+## Want to Contribute?
+We welcome all contributors and suggestions. Submit a Issue/PR with the filled out template, and we'll go from there!
