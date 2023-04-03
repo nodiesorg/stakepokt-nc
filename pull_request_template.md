@@ -1,6 +1,6 @@
 ## Issue ticket number and link
 
-Add clickup ticket link here
+Add internal/GitHub Issue link here
 
 ## Description
 
