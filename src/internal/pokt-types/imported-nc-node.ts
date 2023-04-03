@@ -12,13 +12,3 @@ export type PrivateNcNode = {
     priv_key:string;
 } & ImportedNcNode
 
-class StakableNode {
-
-    private node: ImportedNcNode
-    private txMsgs:TxMsg
-    constructor(node: ImportedNcNode, txMsgs:TxMsg) {
-        this.node = node;
-        this.txMsgs = txMsgs
-    }
-
-}

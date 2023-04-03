@@ -18,130 +18,113 @@ import bigDecimal from "js-big-decimal";
 import {ImportedNcNode} from "@/internal/pokt-types/imported-nc-node";
 import {TransactionBuilder, TxMsg} from "@/internal/pocket-js-2.1.1/packages/transaction-builder";
 import {TransactionResponse} from "@/internal/pocket-js-2.1.1/packages/types/src";
+import {StakableNode, TxMsgNamed, TxMsgResult} from "@/internal/pokt-types/stakable-node";
 
 
-// TODO: Make this scalable with json object
+const DEFAULT_CHAINS = ["0001"]
+const DEFAULT_DOMAIN = new URL('https://parked.com')
+
 type PerformStakeStepProps = {
     stakeForm: StakeForm
 }
 
-type NodeAliasTxsResultsPair = {
-    nodeAlias: string,
-    txs: NodeTxResultPair[]
-}
-
-type StakeResultProps = {
-    nodeAliasTxMap: NodeAliasTxsResultsPair
-}
-
-
-type NodeTxResultPair = {
+type StakeResult = {
     node: ImportedNcNode
-    results?: TransactionResponse
-    error?: any
-    type: string;
+    results: TxMsgResult[]
 }
 
 
-type TxType = "send" | "stake";
-
-type TxMsgDetailed = {
-    txMsg: TxMsg
-    type: TxType;
+type StakeResultItemProps = {
+    stakeResults: StakeResult
 }
 
-function StakeResult({nodeAliasTxMap}: StakeResultProps) {
+
+function StakeResultItem({stakeResults}: StakeResultItemProps) {
 
 
-    const sendTx = nodeAliasTxMap.txs.find(s => s.type == "send")
-    const stakeTx = nodeAliasTxMap.txs.find(s => s.type == "stake")
+    const {node, results} = stakeResults
+    const sendTx = results.find(s => s.txMsgNamed.name === "send")
+    const stakeTx = results.find(s => s.txMsgNamed.name === "stake")
 
     return (
         <Tr>
-            <Td>{nodeAliasTxMap.nodeAlias}</Td>
-            <Td>{!stakeTx ? "Can't find Stake TX": stakeTx.node.address}</Td>
+            <Td>{node.node_alias}</Td>
+            <Td>{node.address}</Td>
             <Td>
-                {!stakeTx ? "Can't find Stake TX" : (stakeTx?.error ? JSON.stringify(stakeTx.error) : (stakeTx.results?.txHash || 'Could not determine TX Hash'))}
+                {!stakeTx ? "Stake TX Pending" : stakeTx.result}
             </Td>
             <Td>
-                {!sendTx ? "N/A" : (sendTx?.error ? JSON.stringify(sendTx.error) : (sendTx.results?.txHash || 'Could not determine TX Hash'))}
+                {results.length == 1 ? "N/A" : (!sendTx ? "Send TX Pending" : sendTx.result)}
             </Td>
         </Tr>
     )
 }
 
-async function stubSubmit ({txMsg: TxMsg}: any) {
-    return {
-        logs: "123",
-    } as TransactionResponse
-}
 
-function submitTxNodePair(node: ImportedNcNode, tb: TransactionBuilder, txMsgs: TxMsgDetailed[]) {
-    const pairTxSubmit = txMsgs.map((tx) => stubSubmit({txMsg: tx.txMsg}).then((r: TransactionResponse) => ({
-        node: node,
-        type: tx.type,
-        result: r
-    } as NodeTxResultPair)).catch(e => ({node: node, error: e, type: tx.type} as NodeTxResultPair)))
-    return pairTxSubmit;
+function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
+    const {stakeAmount, transferAmount, nodesToStake, customOutputAddress, wallet} = stakeForm
+
+    if (!wallet || !stakeAmount || !transferAmount || !nodesToStake || nodesToStake.length == 0 || customOutputAddress && (customOutputAddress.length != 40 || !isHex(customOutputAddress))) {
+        // TODO: Show something went wrong here
+        return [];
+    }
+
+    const tb = getTransactionBuilder(wallet)
+    const outputAddress = customOutputAddress || wallet.getAddress()
+    const transferAmountUPokt = toUPokt(transferAmount)
+    const stakeAmountUPokt = toUPokt(stakeAmount)
+
+    return nodesToStake.map(w => {
+        let txMsgs: TxMsgNamed[] = []
+        // Check if there is a send tx
+        if (transferAmountUPokt.compareTo(new bigDecimal("0")) > 0) {
+            txMsgs.push({
+                name: "send",
+                txMsg: tb.send({
+                    amount: transferAmountUPokt.getValue(),
+                    toAddress: w.address,
+                })
+            })
+        }
+
+        txMsgs.push({
+            name: "stake",
+            txMsg: tb.nodeStake({
+                nodePubKey: w.pub_key,
+                chains: w.chains != undefined && w.chains.length > 0 ? w.chains : DEFAULT_CHAINS,
+                serviceURL: w.domain != undefined ? new URL(w.domain) : DEFAULT_DOMAIN,
+                amount: stakeAmountUPokt.getValue(),
+                outputAddress,
+            })
+        })
+        // Create a mapping to node -> stake/transfer tx
+        return new StakableNode(tb, w, txMsgs)
+    })
 }
 
 function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
-
-    const [stakeResults, setStakeResults] = useState<NodeAliasTxsResultsPair[]>([])
+    const stakableNodes = generateStakableNodes(stakeForm)
+    const [stakeResults, setStakeResults] = useState<StakeResult[]>(stakableNodes.map(s => ({
+        node: s.node,
+        results: []
+    })))
 
     async function handleStake() {
-        const {stakeAmount, transferAmount, nodesToStake, customOutputAddress, wallet} = stakeForm
-
-        if (!wallet || !stakeAmount || !transferAmount || !nodesToStake || nodesToStake.length == 0 || customOutputAddress && (customOutputAddress.length != 40 || !isHex(customOutputAddress))) {
-            // TODO: Show something went wrong here
-            return;
+        if (stakableNodes.length == 0) {
+            return
         }
-
-        const tb = getTransactionBuilder(wallet)
-        const outputAddress = customOutputAddress || wallet.getAddress()
-        const transferAmountUPokt = toUPokt(transferAmount)
-        const stakeAmountUPokt = toUPokt(stakeAmount)
-
-        const txMsgsPair = nodesToStake.map(w => {
-            let sendTxMsg;
-            // Check if there is a send tx
-            if (transferAmountUPokt.compareTo(new bigDecimal("0")) > 0) {
-                sendTxMsg = tb.send({
-                    amount: transferAmountUPokt.getValue(),
-                    toAddress: w.address,
-                });
-            }
-            const stakeTxMsg = tb.nodeStake({
-                nodePubKey: w.pub_key,
-                chains: w.chains != undefined && w.chains.length > 0 ? w.chains : ["0001"],
-                serviceURL: w.domain != undefined ? new URL(w.domain) : new URL('https://parked.com'),
-                amount: stakeAmountUPokt.getValue(),
-                outputAddress: outputAddress,
-            })
-
-            // Create a mapping to node -> stake/transfer tx
-            return {
-                node: w,
-                txMsgs: [
-                    {txMsg: stakeTxMsg, type: "stake"} as TxMsgDetailed,
-                    {txMsg: sendTxMsg, type: "send"} as TxMsgDetailed,
-                ]
-            }
-        })
-
-        const PARALLEL_TASKS = 10;
-        for (let i = 0; i < txMsgsPair.length;) {
-            let promises = [];
-            for (let j = 0; j < PARALLEL_TASKS && i < txMsgsPair.length; i++, j++) {
-                const node = txMsgsPair[i].node;
-                const txMsgs = txMsgsPair[i].txMsgs
-                promises.push(...submitTxNodePair(node, tb, txMsgs));
-            }
-            const result = await Promise.all(promises);
+        for (const node of stakableNodes) {
+            const results = await node.performStakeAndTransfer()
             setStakeResults((prevState) => {
-                return [...prevState, {nodeAlias: result[0].node.nodeAlias, txs: result}]
+                const copy = [...prevState]
+                const nodeCopy = copy.find(s => s.node == node.node)
+                if (!nodeCopy)
+                    return copy;
+                nodeCopy.results = results
+                return copy
             })
         }
+
     }
 
     useEffect(() => {
@@ -173,7 +156,7 @@ function PerformStakeStep({stakeForm}: PerformStakeStepProps) {
                         </Thead>
                         <Tbody color="white">
                             {stakeResults.map((r, i) =>
-                                (<StakeResult nodeAliasTxMap={r} key={i}/>)
+                                (<StakeResultItem stakeResults={r} key={i}/>)
                             )}
                         </Tbody>
                     </Table>

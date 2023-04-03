@@ -16,7 +16,7 @@ import {
 import NdInput from "../nd-input/nd-input";
 import {KeyManager} from "@/internal/pocket-js-2.1.1/packages/signer";
 import {PrivateNcNode} from "@/internal/pokt-types/imported-nc-node";
-import {downloadFile} from "@/internal/react-download/downloader";
+import {downloadFile} from "@/internal/local-downloader/downloader";
 
 const INTEGER_ONLY_REGEX = /^\d+$/
 const CUSTOMER_DEFAULT_ALIAS = "customer"
