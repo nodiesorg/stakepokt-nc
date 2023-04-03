@@ -1,129 +1,178 @@
-import Head from "next/head";
+import { useState } from 'react'
+
 import {
     Box,
-    Button,
     Card,
-    CardBody,
-    CardHeader,
     Container,
     Flex,
-    Heading,
-} from "@chakra-ui/react";
-import {Step, Steps, useSteps} from "chakra-ui-steps";
-import {ArrowBackIcon} from "@chakra-ui/icons";
-import ImportNcWalletStep from "@/components/stake-steps/import-nc-wallet-step";
-import ImportNodeKeysStep from "@/components/stake-steps/import-node-keys-step";
-import SetStakeAmountStep from "@/components/stake-steps/set-stake-amount-step";
-import StakeTable from "@/components/stake-table/StakeTable";
-import {useEffect, useState} from "react";
+    HStack,
+    Image,
+    Link,
+    Text,
+} from '@chakra-ui/react'
+import Head from 'next/head'
 
-// Content for each step
-const steps = [
+import { useSteps } from 'chakra-ui-steps'
+
+import GenerateNodeForm from '@/components/forms/generate-node'
+import StakeNodeForm from '@/components/forms/stake-node'
+
+enum Form {
+    STAKE_NODES = 'STAKE_NODES',
+    GENERATE_NODES = 'GENERATE_NODES',
+}
+
+const stepMetadata = [
     {
-        label: "",
-        headerTitle: "Non Custodial Staking Tool",
-        content: <ImportNcWalletStep/>,
+        headerTitle: 'Non Custodial Staking Tool',
     },
     {
-        label: "",
-        headerTitle: "Import Node Keys",
-        content: <ImportNodeKeysStep/>,
+        headerTitle: 'Import Node Keys',
     },
     {
-        label: "",
-        headerTitle: "Set Stake Distribution",
-        content: <SetStakeAmountStep/>,
+        headerTitle: 'Set Stake Distribution',
     },
-];
+    {
+        headerTitle: 'Staking results',
+    },
+]
 
 export default function Home() {
-
-    const [headerTitle, setActiveStepTitle] = useState(steps[0].headerTitle)
-
-    const {nextStep, prevStep, activeStep} = useSteps({
+    const [form, setForm] = useState<Form>(Form.STAKE_NODES)
+    const {
+        nextStep: goToNextStep,
+        prevStep: goToPrevStep,
+        activeStep,
+    } = useSteps({
         initialStep: 0,
-    });
-
-    useEffect(() => {
-        if (steps.length >= activeStep)
-            return;
-        setActiveStepTitle(steps[activeStep].headerTitle)
-    }, [activeStep])
+    })
 
     return (
         <>
             <Head>
-                <title>Nodies</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1"/>
-                <link rel="icon" href="/favicon.ico"/>
+                <title>StakePokt - Non Custodial Staking Tool</title>
+                <meta
+                    name="description"
+                    content="A tool inspired to make your life easier by performing bulk non-custodial stakes with minimal effort for both node operators and stakers."
+                />
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
+                />
+                <link rel="icon" href="/favicon.png" />
             </Head>
 
+            {/* Nav */}
             <Box as="main" minHeight="100vh">
-                <Flex alignItems="center" minHeight="100vh">
-                    <Container maxWidth="3xl" height="100%">
+                <Flex
+                    backgroundColor="#1B1E30"
+                    padding="1rem 2rem"
+                    justifyContent="flex-end"
+                >
+                    <HStack color="white" padding=".5rem 1rem" spacing={5}>
+                        <Link
+                            onClick={() => {
+                                if (activeStep == stepMetadata.length - 1)
+                                    // is on last step of form then reload the page to reset state(s)
+                                    window.location.reload()
+                                else setForm(Form.STAKE_NODES)
+                            }}
+                        >
+                            Stake Nodes
+                        </Link>
+                        <Link onClick={() => setForm(Form.GENERATE_NODES)}>
+                            Generate Nodes
+                        </Link>
+                    </HStack>
+                </Flex>
+                <Flex minHeight="100vh">
+                    <Container
+                        maxWidth={
+                            activeStep === stepMetadata.length - 1
+                                ? '5xl'
+                                : '3xl'
+                        }
+                        height="100%"
+                        padding="2rem"
+                    >
                         {/* Multistep card */}
                         <Card backgroundColor="#1B1E30">
-                            <CardBody>
-                                <CardHeader>
-                                    <Heading
-                                        color="white"
-                                        fontFamily="Poppins"
-                                        fontSize="24px"
-                                        fontWeight={500}
-                                        textAlign="center"
-                                    >
-                                        {headerTitle}
-                                    </Heading>
-                                </CardHeader>
-
-                                {activeStep !== steps.length ? (
-                                    <>
-                                        {/* Multistep */}
-                                        <Steps
-                                            activeStep={activeStep}
-                                            orientation="horizontal"
-                                            margin="3rem 0"
-                                        >
-                                            {steps.map(({label, content}, index) => (
-                                                <Step label={label} key={index}>
-                                                    {content}
-                                                </Step>
-                                            ))}
-                                        </Steps>
-
-                                        {/* Next and Back buttons */}
-                                        <Flex width="100%" justify="flex-end">
-                                            <Button
-                                                border="1px solid white"
-                                                color="white"
-                                                isDisabled={activeStep === 0}
-                                                leftIcon={<ArrowBackIcon/>}
-                                                marginRight={4}
-                                                onClick={prevStep}
-                                                size="lg"
-                                                variant="outline"
-                                                _hover={{backgroundColor: "transparent"}}
-                                            >
-                                                Back
-                                            </Button>
-                                            <Button
-                                                backgroundColor="#5C58FF"
-                                                onClick={nextStep}
-                                                size="lg"
-                                                _hover={{backgroundColor: "#5C58FF"}}
-                                            >
-                                                {activeStep === 2 ? "Start staking!" : "Next"}
-                                            </Button>
-                                        </Flex>
-                                    </>
-                                ) : (
-                                    <StakeTable/>
-                                )}
-                            </CardBody>
+                            {form === Form.STAKE_NODES ? (
+                                <StakeNodeForm
+                                    activeStep={activeStep}
+                                    goToNextStep={goToNextStep}
+                                    goToPrevStep={goToPrevStep}
+                                />
+                            ) : (
+                                <GenerateNodeForm />
+                            )}
                         </Card>
+
+                        {/* Footer */}
+                        <Box as="footer">
+                            {/* Powered by Nodies */}
+                            <Box margin="2rem 0" textAlign="center">
+                                <Text
+                                    color="#737682"
+                                    fontFamily="Poppins"
+                                    fontSize="12px"
+                                >
+                                    Created by
+                                </Text>
+                                <Link href="https://nodies.org" target="_blank">
+                                    <Image
+                                        src="/images/nodies.svg"
+                                        alt="Nodies"
+                                        width="95px"
+                                        height="auto"
+                                        margin=".5rem auto 0"
+                                    />
+                                </Link>
+                            </Box>
+                            {/* Subfooter */}
+                            <Box
+                                color="white"
+                                display="flex"
+                                justifyContent="space-between"
+                            >
+                                <Text fontSize="12px">
+                                    &copy; {new Date().getFullYear()} BaaS Pools
+                                    LLC
+                                </Text>
+                                <HStack>
+                                    <Link
+                                        href="https://github.com/baaspoolsllc"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/github.svg"
+                                            alt="github"
+                                        />
+                                    </Link>
+                                    <Link
+                                        href="https://discord.gg/pokt"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/discord.svg"
+                                            alt="discord"
+                                        />
+                                    </Link>
+                                    <Link
+                                        href="https://twitter.com/PoktFund"
+                                        target="_blank"
+                                    >
+                                        <Image
+                                            src="/images/twitter.svg"
+                                            alt="twitter"
+                                        />
+                                    </Link>
+                                </HStack>
+                            </Box>
+                        </Box>
                     </Container>
                 </Flex>
             </Box>
         </>
-    );
+    )
 }

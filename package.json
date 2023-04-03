@@ -1,30 +1,39 @@
 {
-  "name": "nodies-stepper",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@chakra-ui/icons": "^2.0.17",
-    "@chakra-ui/react": "^2.5.2",
-    "@emotion/react": "^11.10.6",
-    "@emotion/styled": "^11.10.6",
-    "@next/font": "^13.2.4",
-    "@types/node": "18.15.5",
-    "@types/react": "18.0.28",
-    "@types/react-dom": "18.0.11",
-    "chakra-ui-steps": "^2.0.4",
-    "eslint": "8.36.0",
-    "eslint-config-next": "13.2.4",
-    "framer-motion": "^10.8.5",
-    "next": "13.2.4",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "react-dropzone": "^14.2.3",
-    "typescript": "4.9.5"
-  }
+    "name": "nodies-stepper",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "postinstall": "cd src/internal/pocket-js-2.1.1 && pnpm install && pnpm build",
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "@chakra-ui/icons": "^2.0.17",
+        "@chakra-ui/react": "^2.5.2",
+        "@emotion/react": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@next/font": "^13.2.4",
+        "@types/node": "18.15.5",
+        "@types/react": "18.0.28",
+        "@types/react-dom": "18.0.11",
+        "chakra-ui-steps": "^2.0.4",
+        "csv-string": "^4.1.1",
+        "eslint": "8.36.0",
+        "eslint-config-next": "13.2.4",
+        "framer-motion": "^10.8.5",
+        "js-big-decimal": "^1.4.1",
+        "next": "13.2.4",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-dropzone": "^14.2.3",
+        "react-icons": "^4.8.0",
+        "typescript": "4.9.5"
+    },
+    "devDependencies": {
+        "eslint-config-prettier": "^8.8.0",
+        "prettier": "2.8.7",
+        "prettier-plugin-organize-imports": "^3.2.2"
+    }
 }
