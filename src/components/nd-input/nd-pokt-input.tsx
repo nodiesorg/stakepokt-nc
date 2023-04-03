@@ -1,10 +1,9 @@
 import bigDecimal from 'js-big-decimal'
 
-import { ChangeEvent, ReactNode, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import { Simulate } from 'react-dom/test-utils'
-import invalid = Simulate.invalid
-import { toUPokt } from '@/internal/pokt-utils/pokt-denom'
 import NdInput from './nd-input'
+import invalid = Simulate.invalid
 
 type NDPoktDenomInputProps = {
     maxPoktValue?: bigDecimal

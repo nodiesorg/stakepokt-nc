@@ -1,17 +1,17 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
+import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import {
     Box,
     Button,
     Flex,
+    HStack,
+    Icon,
     Text,
     Tooltip,
-    Icon,
-    HStack,
 } from '@chakra-ui/react'
-import { QuestionOutlineIcon } from '@chakra-ui/icons'
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react'
 
-import NdInput from '@/components//nd-input/nd-input'
 import NDDropzone from '@/components//nd-dropzone/nd-dropzone'
+import NdInput from '@/components//nd-input/nd-input'
 import { ForwardStepProps } from '@/components/stake-steps/step-props'
 import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
 

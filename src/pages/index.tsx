@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-import Head from 'next/head'
 import {
     Box,
     Card,
@@ -8,14 +7,15 @@ import {
     Flex,
     HStack,
     Image,
-    Text,
     Link,
+    Text,
 } from '@chakra-ui/react'
+import Head from 'next/head'
 
 import { useSteps } from 'chakra-ui-steps'
 
-import StakeNodeForm from '@/components/forms/stake-node'
 import GenerateNodeForm from '@/components/forms/generate-node'
+import StakeNodeForm from '@/components/forms/stake-node'
 
 enum Form {
     STAKE_NODES = 'STAKE_NODES',

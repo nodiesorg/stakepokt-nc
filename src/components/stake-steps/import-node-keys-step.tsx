@@ -1,11 +1,11 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react'
-import NDDropzone from '../nd-dropzone/nd-dropzone'
-import { useState } from 'react'
-import { ArrowBackIcon } from '@chakra-ui/icons'
-import * as CSV from 'csv-string'
 import { BidirectionalStepProps } from '@/components/stake-steps/step-props'
 import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
 import { isHex } from '@/internal/pokt-utils/pokt-validate'
+import { ArrowBackIcon } from '@chakra-ui/icons'
+import { Box, Button, Flex, Text } from '@chakra-ui/react'
+import * as CSV from 'csv-string'
+import { useState } from 'react'
+import NDDropzone from '../nd-dropzone/nd-dropzone'
 
 export type ImportNodeKeysStepProps = {} & BidirectionalStepProps
 

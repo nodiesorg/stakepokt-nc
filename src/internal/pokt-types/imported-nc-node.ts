@@ -1,5 +1,3 @@
-import { TxMsg } from '@/internal/pocket-js-2.1.1/packages/transaction-builder'
-
 export type ImportedNcNode = {
     node_alias: string
     address: string

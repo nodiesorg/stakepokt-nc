@@ -1,15 +1,15 @@
-import { useState } from 'react'
 import { CardBody, CardHeader, Heading } from '@chakra-ui/react'
-import { Steps, Step } from 'chakra-ui-steps'
+import { Step, Steps } from 'chakra-ui-steps'
+import { useState } from 'react'
 
-import ImportNcWalletStep from '../stake-steps/import-nc-wallet-step'
-import ImportNodeKeysStep from '../stake-steps/import-node-keys-step'
-import PerformStakeStep from '../stake-steps/perform-stake-step'
-import SetStakeAmountStep from '../stake-steps/set-stake-amount-step'
 import {
     DefaultStakeForm,
     StakeForm,
 } from '@/components/stake-steps/stake-form'
+import ImportNcWalletStep from '../stake-steps/import-nc-wallet-step'
+import ImportNodeKeysStep from '../stake-steps/import-node-keys-step'
+import PerformStakeStep from '../stake-steps/perform-stake-step'
+import SetStakeAmountStep from '../stake-steps/set-stake-amount-step'
 
 const stepMetadata = [
     {

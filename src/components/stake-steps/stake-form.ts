@@ -1,5 +1,5 @@
-import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
 import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
+import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
 import bigDecimal from 'js-big-decimal'
 
 export type StakeForm = {

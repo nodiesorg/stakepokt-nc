@@ -1,4 +1,3 @@
-import { ChangeEvent, useEffect, useState } from 'react'
 import { QuestionOutlineIcon } from '@chakra-ui/icons'
 import {
     Button,
@@ -12,11 +11,12 @@ import {
     Text,
     Tooltip,
 } from '@chakra-ui/react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
-import NdInput from '../nd-input/nd-input'
+import { downloadFile } from '@/internal/local-downloader/downloader'
 import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
 import { PrivateNcNode } from '@/internal/pokt-types/imported-nc-node'
-import { downloadFile } from '@/internal/local-downloader/downloader'
+import NdInput from '../nd-input/nd-input'
 
 const INTEGER_ONLY_REGEX = /^\d+$/
 const CUSTOMER_DEFAULT_ALIAS = 'customer'

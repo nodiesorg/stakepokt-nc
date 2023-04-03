@@ -1,16 +1,16 @@
-import type { AppProps } from 'next/app'
-import { StepsTheme } from 'chakra-ui-steps'
 import {
     ChakraProvider,
     extendTheme,
     StyleFunctionProps,
 } from '@chakra-ui/react'
+import { StepsTheme } from 'chakra-ui-steps'
+import type { AppProps } from 'next/app'
 
-import { Input } from '@/styles/Input'
 import { Button } from '@/styles/Button'
+import { Input } from '@/styles/Input'
 
-import { Inter, Poppins, Roboto } from '@next/font/google'
 import { NumberInput } from '@/styles/NumberInput'
+import { Inter, Poppins, Roboto } from '@next/font/google'
 
 // Fonts
 const roboto = Roboto({

@@ -1,10 +1,10 @@
 import {
-    Input,
-    Text,
-    InputGroup,
-    InputRightElement,
     Icon,
+    Input,
+    InputGroup,
     InputProps,
+    InputRightElement,
+    Text,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'

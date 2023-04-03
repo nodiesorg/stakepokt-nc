@@ -1,5 +1,5 @@
-import { Accept, useDropzone } from 'react-dropzone'
 import { Box, Text } from '@chakra-ui/react'
+import { Accept, useDropzone } from 'react-dropzone'
 
 type DropdownFileTypes = 'ppk' | 'csv' | 'txt' | 'json'
 

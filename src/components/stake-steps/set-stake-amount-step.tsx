@@ -1,3 +1,11 @@
+import NDPoktDenomInput from '@/components/nd-input/nd-pokt-input'
+import { BidirectionalStepProps } from '@/components/stake-steps/step-props'
+import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
+import { PoktProvider } from '@/internal/pokt-rpc/provider'
+import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
+import { toPokt } from '@/internal/pokt-utils/pokt-denom'
+import { isHex } from '@/internal/pokt-utils/pokt-validate'
+import { ArrowBackIcon, QuestionOutlineIcon } from '@chakra-ui/icons'
 import {
     Box,
     Button,
@@ -9,17 +17,8 @@ import {
     Text,
     Tooltip,
 } from '@chakra-ui/react'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { BidirectionalStepProps } from '@/components/stake-steps/step-props'
-import { ArrowBackIcon } from '@chakra-ui/icons'
-import { PoktProvider } from '@/internal/pokt-rpc/provider'
-import { KeyManager } from '@/internal/pocket-js-2.1.1/packages/signer'
-import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
-import { isHex } from '@/internal/pokt-utils/pokt-validate'
-import NDPoktDenomInput from '@/components/nd-input/nd-pokt-input'
 import bigDecimal from 'js-big-decimal'
-import { POKT_DENOM_UNIT, toPokt } from '@/internal/pokt-utils/pokt-denom'
-import { QuestionOutlineIcon } from '@chakra-ui/icons'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 export type SetStakeAmountStepProps = {
     wallet: KeyManager | undefined

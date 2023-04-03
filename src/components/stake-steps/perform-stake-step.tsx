@@ -1,3 +1,13 @@
+import { StakeForm } from '@/components/stake-steps/stake-form'
+import { getTransactionBuilder } from '@/internal/pokt-rpc/provider'
+import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
+import {
+    StakableNode,
+    TxMsgNamed,
+    TxMsgResult,
+} from '@/internal/pokt-types/stakable-node'
+import { toUPokt } from '@/internal/pokt-utils/pokt-denom'
+import { isHex } from '@/internal/pokt-utils/pokt-validate'
 import {
     Box,
     Table,
@@ -8,18 +18,8 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react'
-import { StakeForm } from '@/components/stake-steps/stake-form'
-import { useEffect, useState } from 'react'
-import { isHex } from '@/internal/pokt-utils/pokt-validate'
-import { getTransactionBuilder } from '@/internal/pokt-rpc/provider'
-import { toUPokt } from '@/internal/pokt-utils/pokt-denom'
 import bigDecimal from 'js-big-decimal'
-import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
-import {
-    StakableNode,
-    TxMsgNamed,
-    TxMsgResult,
-} from '@/internal/pokt-types/stakable-node'
+import { useEffect, useState } from 'react'
 
 const DEFAULT_CHAINS = ['0001']
 const DEFAULT_DOMAIN = new URL('https://parked.com')
