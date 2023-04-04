@@ -13,7 +13,8 @@ export const getTransactionBuilder = (
     wallet: KeyManager
 ): TransactionBuilder => {
     return new TransactionBuilder({
-        chainID: (process.env.POKT_CHAIN_ID as ChainID) || 'mainnet',
+        chainID:
+            (process.env.NEXT_PUBLIC_POKT_CHAIN_ID as ChainID) || 'mainnet',
         provider: PoktProvider,
         signer: wallet,
     })
