@@ -1,3 +1,4 @@
+import { ArrowBackIcon } from '@chakra-ui/icons'
 import {
     Box,
     Button,
@@ -23,6 +24,7 @@ function ConfirmationStep({
     onNextStep,
     onPrevStep,
 }: ConfirmationStepProps) {
+    console.log('form', form)
     const finishStep = () => {}
 
     return (
@@ -37,7 +39,7 @@ function ConfirmationStep({
                 {`Additional Transfer Amount Per Node: ${form.transferAmount?.getValue()}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                {`Non Custodial Address: Test: ${
+                {`Non Custodial Address: ${
                     form.customOutputAddress || form.wallet?.getAddress()
                 }`}
             </Text>
@@ -62,10 +64,14 @@ function ConfirmationStep({
                             </Tr>
                         </Thead>
                         <Tbody color="white">
-                            <Tr>
-                                <Td>gMZmZHXWNzD8hpKfue3ik5KG</Td>
-                                <Td>gMZmZHXWNzD8hpKfue3ik5KG</Td>
-                            </Tr>
+                            {form.nodesToStake?.map((node) => {
+                                return (
+                                    <Tr key={node.node_alias} >
+                                        <Td>{node.node_alias}</Td>
+                                        <Td>{node.address}</Td>
+                                    </Tr>
+                                )
+                            })}
                         </Tbody>
                     </Table>
                 </TableContainer>
@@ -73,12 +79,24 @@ function ConfirmationStep({
 
             <Flex width="100%" justify="flex-end">
                 <Button
+                    border="1px solid white"
+                    color="white"
+                    leftIcon={<ArrowBackIcon />}
+                    marginRight={4}
+                    onClick={onPrevStep}
+                    size="lg"
+                    variant="outline"
+                    _hover={{ backgroundColor: 'transparent' }}
+                >
+                    Back
+                </Button>
+                <Button
                     backgroundColor="#5C58FF"
                     onClick={finishStep}
                     size="lg"
                     _hover={{ backgroundColor: '#5C58FF' }}
                 >
-                    Next
+                    Yes, I'm ready to stake
                 </Button>
             </Flex>
         </>

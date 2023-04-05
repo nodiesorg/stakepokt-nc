@@ -33,6 +33,9 @@ const stepMetadata = [
         headerTitle: 'Set Stake Distribution',
     },
     {
+        headerTitle: 'Confirm Stake',
+    },
+    {
         headerTitle: 'Staking results',
     },
 ]
@@ -62,7 +65,6 @@ export default function Home() {
                 <link rel="icon" href="/favicon.png" />
             </Head>
 
-            {/* Nav */}
             <Box as="main" minHeight="100vh">
                 <Flex
                     backgroundColor="#1B1E30"
@@ -91,6 +93,7 @@ export default function Home() {
                         </Link>
                     </HStack>
                 </Flex>
+
                 <Flex minHeight="100vh">
                     <Container
                         maxWidth={

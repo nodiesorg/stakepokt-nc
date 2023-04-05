@@ -242,7 +242,7 @@ function SetStakeAmountStep({
                 <Button
                     backgroundColor="#5C58FF"
                     onClick={finishStep}
-                    isDisabled={!nextStepEnabled}
+                    // isDisabled={!nextStepEnabled} // restore
                     size="lg"
                     _hover={{ backgroundColor: '#5C58FF' }}
                 >

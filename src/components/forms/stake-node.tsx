@@ -23,6 +23,9 @@ const stepMetadata = [
         headerTitle: 'Set Stake Distribution',
     },
     {
+        headerTitle: 'Confirm Stake',
+    },
+    {
         headerTitle: 'Staking results',
     },
 ]
