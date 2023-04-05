@@ -1,7 +1,10 @@
-import { ArrowBackIcon } from '@chakra-ui/icons'
+import { useState } from 'react';
+import { stringify } from 'csv-string';
+import { ArrowBackIcon, DownloadIcon } from '@chakra-ui/icons'
 import {
     Box,
     Button,
+    ButtonGroup,
     Flex,
     Table,
     TableContainer,
@@ -19,13 +22,29 @@ type ConfirmationStepProps = {
     form: StakeForm
 } & BidirectionalStepProps
 
+function convertToCsv(data: any) {
+    const headers = data[0];
+    const rows = data.slice(1);
+    const csv = stringify([headers, ...rows]);
+    return csv;  
+}
+
 function ConfirmationStep({
     form,
     onNextStep,
     onPrevStep,
 }: ConfirmationStepProps) {
-    console.log('form', form)
+    const [csv, setCsv] = useState('');
     const finishStep = () => {}
+
+    function handleExport() {
+        const tableData = [
+            ['Node Alias', 'Node Address'],
+            form.nodesToStake?.map((node) => [node.node_alias, node.address])
+        ]
+        const csvData = convertToCsv(tableData);
+        setCsv(csvData);
+    }
 
     return (
         <>
@@ -77,27 +96,42 @@ function ConfirmationStep({
                 </TableContainer>
             </Box>
 
-            <Flex width="100%" justify="flex-end">
-                <Button
+            <Flex width="100%" justify="space-between">
+                <Button as="a"
                     border="1px solid white"
                     color="white"
-                    leftIcon={<ArrowBackIcon />}
+                    leftIcon={<DownloadIcon />}
                     marginRight={4}
-                    onClick={onPrevStep}
+                    onClick={handleExport}
                     size="lg"
                     variant="outline"
+                    href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="confirm-stake.csv"
                     _hover={{ backgroundColor: 'transparent' }}
                 >
-                    Back
+                    Export
                 </Button>
-                <Button
-                    backgroundColor="#5C58FF"
-                    onClick={finishStep}
-                    size="lg"
-                    _hover={{ backgroundColor: '#5C58FF' }}
-                >
-                    Yes, I'm ready to stake
-                </Button>
+                <ButtonGroup>
+                    <Button
+                        border="1px solid white"
+                        color="white"
+                        leftIcon={<ArrowBackIcon />}
+                        marginRight={4}
+                        onClick={onPrevStep}
+                        size="lg"
+                        variant="outline"
+                        _hover={{ backgroundColor: 'transparent' }}
+                    >
+                        Back
+                    </Button>
+                    <Button
+                        backgroundColor="#5C58FF"
+                        onClick={finishStep}
+                        size="lg"
+                        _hover={{ backgroundColor: '#5C58FF' }}
+                    >
+                        Yes, I'm ready to stake
+                    </Button>
+                </ButtonGroup>
             </Flex>
         </>
     )
