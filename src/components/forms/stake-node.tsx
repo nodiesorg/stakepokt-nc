@@ -92,6 +92,9 @@ function StakeNodeForm({
                     />
                 </Step>
                 <Step label={''} key={3}>
+                    <ConfirmationStep form={stakeForm} />
+                </Step>
+                <Step label={''} key={4}>
                     <PerformStakeStep stakeForm={stakeForm} />
                 </Step>
             </Steps>
