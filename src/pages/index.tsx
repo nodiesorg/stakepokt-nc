@@ -80,7 +80,14 @@ export default function Home() {
                         >
                             Stake Nodes
                         </Link>
-                        <Link onClick={() => setForm(Form.GENERATE_NODES)}>
+                        <Link
+                            onClick={() => {
+                                if (activeStep != 0)
+                                    // user was on an unknown state, so need to restart
+                                    window.location.reload()
+                                else setForm(Form.GENERATE_NODES)
+                            }}
+                        >
                             Generate Nodes
                         </Link>
                     </HStack>
