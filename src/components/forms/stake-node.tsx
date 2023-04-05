@@ -10,6 +10,7 @@ import ImportNcWalletStep from '../stake-steps/import-nc-wallet-step'
 import ImportNodeKeysStep from '../stake-steps/import-node-keys-step'
 import PerformStakeStep from '../stake-steps/perform-stake-step'
 import SetStakeAmountStep from '../stake-steps/set-stake-amount-step'
+import ConfirmationStep from '../stake-steps/confirmation-step'
 
 const stepMetadata = [
     {
@@ -92,6 +93,13 @@ function StakeNodeForm({
                     />
                 </Step>
                 <Step label={''} key={3}>
+                    <ConfirmationStep 
+                        form={stakeForm}
+                        onNextStep={handleOnNextStep}
+                        onPrevStep={goToPrevStep}
+                    />
+                </Step>
+                <Step label={''} key={4}>
                     <PerformStakeStep stakeForm={stakeForm} />
                 </Step>
             </Steps>
