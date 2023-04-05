@@ -72,8 +72,8 @@ export default function Home() {
                     <HStack color="white" padding=".5rem 1rem" spacing={5}>
                         <Link
                             onClick={() => {
+                                // is on last step of form then reload the page to reset state(s)
                                 if (activeStep == stepMetadata.length - 1)
-                                    // is on last step of form then reload the page to reset state(s)
                                     window.location.reload()
                                 else setForm(Form.STAKE_NODES)
                             }}
@@ -82,9 +82,8 @@ export default function Home() {
                         </Link>
                         <Link
                             onClick={() => {
-                                if (activeStep != 0)
-                                    // user was on an unknown state, so need to restart
-                                    window.location.reload()
+                                // user was on an unknown state, so need to restart
+                                if (activeStep != 0) window.location.reload()
                                 else setForm(Form.GENERATE_NODES)
                             }}
                         >
