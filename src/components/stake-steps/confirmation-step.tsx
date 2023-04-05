@@ -2,11 +2,11 @@ import {
     Box,
     Button,
     Flex,
-    Text,
     Table,
     TableContainer,
     Tbody,
     Td,
+    Text,
     Th,
     Thead,
     Tr,
@@ -18,22 +18,28 @@ type ConfirmationStepProps = {
     form: StakeForm
 } & BidirectionalStepProps
 
-function ConfirmationStep({form, onNextStep, onPrevStep}: ConfirmationStepProps) {
+function ConfirmationStep({
+    form,
+    onNextStep,
+    onPrevStep,
+}: ConfirmationStepProps) {
     const finishStep = () => {}
 
     return (
         <>
             <Text color="white" margin="1rem 0">
-                 {`Stake Amount Per Node: ${form.stakeAmount}`}
+                {`Stake Amount Per Node: ${form.stakeAmount?.getValue()}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                 {`Nodes to Stake: ${form.nodesToStake}`}
+                {`Nodes to Stake: ${form.nodesToStake?.length}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                {`Additional Transfer Amount Per Node: ${form.transferAmount}`}
+                {`Additional Transfer Amount Per Node: ${form.transferAmount?.getValue()}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                {`Non Custodial Address: Test: ${form.customOutputAddress}`}
+                {`Non Custodial Address: Test: ${
+                    form.customOutputAddress || form.wallet?.getAddress()
+                }`}
             </Text>
 
             <Box margin="2rem 0" overflow="scroll" maxH="500px">
