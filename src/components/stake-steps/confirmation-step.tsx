@@ -19,7 +19,7 @@ import { StakeForm } from './stake-form'
 import { BidirectionalStepProps } from './step-props'
 
 type ConfirmationStepProps = {
-    form: StakeForm
+    stakeForm: StakeForm
 } & BidirectionalStepProps
 
 function convertToCsv(data: any) {
@@ -30,17 +30,29 @@ function convertToCsv(data: any) {
 }
 
 function ConfirmationStep({
-    form,
+    stakeForm,
     onNextStep,
     onPrevStep,
 }: ConfirmationStepProps) {
     const [csv, setCsv] = useState('');
-    const finishStep = () => {}
+    const {
+        stakeAmount,
+        transferAmount,
+        customOutputAddress,
+    } = stakeForm
+
+    const finishStep = () => {
+        onNextStep({
+            stakeAmount: stakeAmount,
+            transferAmount: transferAmount,
+            customOutputAddress: customOutputAddress,
+        })
+    }
 
     function handleExport() {
         const tableData = [
             ['Node Alias', 'Node Address'],
-            form.nodesToStake?.map((node) => [node.node_alias, node.address])
+            stakeForm.nodesToStake?.map((node) => [node.node_alias, node.address])
         ]
         const csvData = convertToCsv(tableData);
         setCsv(csvData);
@@ -49,22 +61,22 @@ function ConfirmationStep({
     return (
         <>
             <Text color="white" margin="1rem 0">
-                {`Stake Amount Per Node: ${form.stakeAmount?.getValue()}`}
+                {`Stake Amount Per Node: ${stakeForm.stakeAmount?.getValue()}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                {`Nodes to Stake: ${form.nodesToStake?.length}`}
+                {`Nodes to Stake: ${stakeForm.nodesToStake?.length}`}
             </Text>
             <Text color="white" margin="1rem 0">
-                {`Additional Transfer Amount Per Node: ${form.transferAmount?.getValue()}`}
+                {`Additional Transfer Amount Per Node: ${stakeForm.transferAmount?.getValue()}`}
             </Text>
             <Text color="white" margin="1rem 0">
                 {`Non Custodial Address: ${
-                    form.customOutputAddress || form.wallet?.getAddress()
+                    stakeForm.customOutputAddress || stakeForm.wallet?.getAddress()
                 }`}
             </Text>
 
-            <Box margin="2rem 0" overflow="scroll" maxH="500px">
-                <TableContainer>
+            <Box margin="2rem 0" overflow="scroll" height="300px" overflowY="scroll">
+                <TableContainer >
                     <Table
                         sx={{
                             tableLayout: 'fixed',
@@ -83,7 +95,7 @@ function ConfirmationStep({
                             </Tr>
                         </Thead>
                         <Tbody color="white">
-                            {form.nodesToStake?.map((node) => {
+                            {stakeForm.nodesToStake?.map((node) => {
                                 return (
                                     <Tr key={node.node_alias} >
                                         <Td>{node.node_alias}</Td>

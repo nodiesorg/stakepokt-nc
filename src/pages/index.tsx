@@ -97,7 +97,7 @@ export default function Home() {
                 <Flex minHeight="100vh">
                     <Container
                         maxWidth={
-                            activeStep === stepMetadata.length - 1
+                            activeStep === stepMetadata.length - 1 || activeStep === 3
                                 ? '5xl'
                                 : '3xl'
                         }

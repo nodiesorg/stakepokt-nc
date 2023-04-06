@@ -97,7 +97,7 @@ function StakeNodeForm({
                 </Step>
                 <Step label={''} key={3}>
                     <ConfirmationStep 
-                        form={stakeForm}
+                        stakeForm={stakeForm}
                         onNextStep={handleOnNextStep}
                         onPrevStep={goToPrevStep}
                     />
