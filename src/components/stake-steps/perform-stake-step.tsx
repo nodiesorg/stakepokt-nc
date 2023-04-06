@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react'
+import { stringify } from 'csv-string';
 import { StakeForm } from '@/components/stake-steps/stake-form'
 import { getTransactionBuilder } from '@/internal/pokt-rpc/provider'
 import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
@@ -8,8 +10,11 @@ import {
 } from '@/internal/pokt-types/stakable-node'
 import { toUPokt } from '@/internal/pokt-utils/pokt-denom'
 import { isHex } from '@/internal/pokt-utils/pokt-validate'
+import { DownloadIcon } from '@chakra-ui/icons'
 import {
     Box,
+    Button,
+    Flex,
     Table,
     TableContainer,
     Tbody,
@@ -19,7 +24,6 @@ import {
     Tr,
 } from '@chakra-ui/react'
 import bigDecimal from 'js-big-decimal'
-import { useEffect, useState } from 'react'
 
 const DEFAULT_CHAINS = ['0001']
 const DEFAULT_DOMAIN = new URL('https://parked.com')
@@ -33,29 +37,11 @@ type StakeResult = {
     results: TxMsgResult[]
 }
 
-type StakeResultItemProps = {
-    stakeResults: StakeResult
-}
-
-function StakeResultItem({ stakeResults }: StakeResultItemProps) {
-    const { node, results } = stakeResults
-    const sendTx = results.find((s) => s.txMsgNamed.name === 'send')
-    const stakeTx = results.find((s) => s.txMsgNamed.name === 'stake')
-
-    return (
-        <Tr>
-            <Td>{node.node_alias}</Td>
-            <Td>{node.address}</Td>
-            <Td>{!stakeTx ? 'Stake TX Pending' : stakeTx.result}</Td>
-            <Td>
-                {results.length == 1
-                    ? 'N/A'
-                    : !sendTx
-                    ? 'Send TX Pending'
-                    : sendTx.result}
-            </Td>
-        </Tr>
-    )
+function convertToCsv(data: any) {
+    const headers = data[0];
+    const rows = data.slice(1);
+    const csv = stringify([headers, ...rows]);
+    return csv;  
 }
 
 function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
@@ -119,12 +105,14 @@ function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
 
 function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
     const stakableNodes = generateStakableNodes(stakeForm)
+    const [csv, setCsv] = useState('');
     const [stakeResults, setStakeResults] = useState<StakeResult[]>(
         stakableNodes.map((s) => ({
             node: s.node,
             results: [],
         }))
     )
+    const tableData = [['Node Alias', 'Node Address', 'Stake TX Hash', 'Transfer TX Hash']]
 
     async function handleStake() {
         if (stakableNodes.length == 0) {
@@ -145,6 +133,11 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
     useEffect(() => {
         handleStake()
     }, [])
+
+    function handleExport() {
+        const csvData = convertToCsv(tableData);
+        setCsv(csvData);
+    }
 
     return (
         <Box>
@@ -170,13 +163,45 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
                             </Tr>
                         </Thead>
                         <Tbody color="white">
-                            {stakeResults.map((r, i) => (
-                                <StakeResultItem stakeResults={r} key={i} />
-                            ))}
+                            {stakeResults.map((result, i) => {
+                                    const { node, results } = result;
+                                    const sendTx = results.find((s) => s.txMsgNamed.name === 'send')
+                                    const stakeTx = results.find((s) => s.txMsgNamed.name === 'stake')
+                                    const stakeTxData = !stakeTx ? 'Stake TX Pending' : stakeTx.result;
+                                    const sentTxData = results.length == 1 ? 'N/A' : !sendTx ? 'Send TX Pending' : sendTx.result
+
+                                    tableData.push([node.node_alias, node.address, stakeTxData, sentTxData])
+
+                                    return (
+                                        <Tr key={i}>
+                                            <Td>{node.node_alias}</Td>
+                                            <Td>{node.address}</Td>
+                                            <Td>{stakeTxData}</Td>
+                                            <Td>{sentTxData}</Td>
+                                        </Tr>
+                                    )
+                                }
+                            )}
                         </Tbody>
                     </Table>
                 </TableContainer>
             </Box>
+
+            <Flex width="100%" justify="flex-end">
+                <Button as="a"
+                    border="1px solid white"
+                    color="white"
+                    leftIcon={<DownloadIcon />}
+                    marginRight={4}
+                    onClick={handleExport}
+                    size="lg"
+                    variant="outline"
+                    href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="staking-results.csv"
+                    _hover={{ backgroundColor: 'transparent' }}
+                >
+                    Export
+                </Button>
+            </Flex>
         </Box>
     )
 }

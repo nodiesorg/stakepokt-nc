@@ -108,20 +108,7 @@ function ConfirmationStep({
                 </TableContainer>
             </Box>
 
-            <Flex width="100%" justify="space-between">
-                <Button as="a"
-                    border="1px solid white"
-                    color="white"
-                    leftIcon={<DownloadIcon />}
-                    marginRight={4}
-                    onClick={handleExport}
-                    size="lg"
-                    variant="outline"
-                    href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="confirm-stake.csv"
-                    _hover={{ backgroundColor: 'transparent' }}
-                >
-                    Export
-                </Button>
+            <Flex width="100%" justify="flex-end">
                 <ButtonGroup>
                     <Button
                         border="1px solid white"
