@@ -19,7 +19,12 @@ First, install node dependencies
 pnpm i
 ```
 
-Second, open up
+Second, create a .env.local file based off `.env.local.template` (i.e)
+```bash
+cp .env.local.template .env.local
+```
+
+Finally run `pnpm run dev`
 
 ```bash
 https://localhost:3000

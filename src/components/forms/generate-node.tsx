@@ -49,7 +49,7 @@ function GenerateNodeForm() {
         let publicNodesCsvData = 'alias,pubKey,address,domain,chains'
         nodes.forEach(
             (s: KeyManager, i) =>
-                (publicNodesCsvData += `\n${aliasOrDefault}-${i},${s.getPublicKey()},${s.getAddress()},,${chainsText}`)
+                (publicNodesCsvData += `\n${aliasOrDefault}-${i},${s.getPublicKey()},${s.getAddress()},,"${chainsText}"`)
         )
 
         let privateNodes: PrivateNcNode[] = nodes.map((s, i) => ({
