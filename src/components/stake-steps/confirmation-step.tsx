@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { stringify } from 'csv-string';
-import { ArrowBackIcon, DownloadIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 import {
     Box,
     Button,
@@ -22,19 +20,11 @@ type ConfirmationStepProps = {
     stakeForm: StakeForm
 } & BidirectionalStepProps
 
-function convertToCsv(data: any) {
-    const headers = data[0];
-    const rows = data.slice(1);
-    const csv = stringify([headers, ...rows]);
-    return csv;  
-}
-
 function ConfirmationStep({
     stakeForm,
     onNextStep,
     onPrevStep,
 }: ConfirmationStepProps) {
-    const [csv, setCsv] = useState('');
     const {
         stakeAmount,
         transferAmount,
@@ -47,15 +37,6 @@ function ConfirmationStep({
             transferAmount: transferAmount,
             customOutputAddress: customOutputAddress,
         })
-    }
-
-    function handleExport() {
-        const tableData = [
-            ['Node Alias', 'Node Address'],
-            stakeForm.nodesToStake?.map((node) => [node.node_alias, node.address])
-        ]
-        const csvData = convertToCsv(tableData);
-        setCsv(csvData);
     }
 
     return (
