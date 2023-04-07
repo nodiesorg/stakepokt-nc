@@ -8,6 +8,7 @@ import type { AppProps } from 'next/app'
 
 import { Button } from '@/styles/Button'
 import { Input } from '@/styles/Input'
+import { Table } from '@/styles/Table'
 
 import { NumberInput } from '@/styles/NumberInput'
 import { Inter, Poppins, Roboto } from '@next/font/google'
@@ -58,6 +59,7 @@ const theme = extendTheme({
         Input,
         NumberInput,
         Steps: CustomStepsStyles,
+        Table,
     },
 })
 

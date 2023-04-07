@@ -1,4 +1,3 @@
-import { StakeForm } from '@/components/stake-steps/stake-form'
 import { getTransactionBuilder } from '@/internal/pokt-rpc/provider'
 import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
 import {
@@ -8,6 +7,7 @@ import {
 } from '@/internal/pokt-types/stakable-node'
 import { toUPokt } from '@/internal/pokt-utils/pokt-denom'
 import { isHex } from '@/internal/pokt-utils/pokt-validate'
+import { TableContainerStyle } from '@/styles/Table'
 import { DownloadIcon } from '@chakra-ui/icons'
 import {
     Box,
@@ -24,6 +24,8 @@ import {
 import { stringify } from 'csv-string'
 import bigDecimal from 'js-big-decimal'
 import { useEffect, useState } from 'react'
+
+import { StakeForm } from '@/components/stake-steps/stake-form'
 
 const DEFAULT_CHAINS = ['0001']
 const DEFAULT_DOMAIN = new URL('https://parked.com')
@@ -143,84 +145,54 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
 
     return (
         <Box>
-            <Box
-                margin="2rem 0"
-                height="300px"
-                overflowY="scroll"
-                sx={{
-                    '&::-webkit-scrollbar': {
-                        width: '7px',
-                        borderRadius: '5px',
-                        backgroundColor: '#202436',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                        borderRadius: '5px',
-                        backgroundColor: '#B9B6D7',
-                    },
-                    '&::-webkit-scrollbar:horizontal': {
-                        display: 'none',
-                    },
-                }}
-            >
-                <TableContainer>
-                    <Table
-                        sx={{
-                            tableLayout: 'fixed',
-                            whiteSpace: 'normal',
-                            td: {
-                                wordWrap: 'break-word',
-                                wordBreak: 'break-all',
-                            },
-                        }}
-                        variant="simple"
-                    >
-                        <Thead>
-                            <Tr>
-                                <Th>Node Alias</Th>
-                                <Th>Node Address</Th>
-                                <Th>Stake TX Hash</Th>
-                                <Th>Transfer TX Hash</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody color="white">
-                            {stakeResults.map((result, i) => {
-                                const { node, results } = result
-                                const sendTx = results.find(
-                                    (s) => s.txMsgNamed.name === 'send'
-                                )
-                                const stakeTx = results.find(
-                                    (s) => s.txMsgNamed.name === 'stake'
-                                )
-                                const stakeTxData = !stakeTx
-                                    ? 'Stake TX Pending'
-                                    : stakeTx.result
-                                const sentTxData =
-                                    results.length == 1
-                                        ? 'N/A'
-                                        : !sendTx
-                                        ? 'Send TX Pending'
-                                        : sendTx.result
+            <TableContainer sx={TableContainerStyle}>
+                <Table variant="simple">
+                    <Thead>
+                        <Tr>
+                            <Th>Node Alias</Th>
+                            <Th>Node Address</Th>
+                            <Th>Stake TX Hash</Th>
+                            <Th>Transfer TX Hash</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody color="white">
+                        {stakeResults.map((result, i) => {
+                            const { node, results } = result
+                            const sendTx = results.find(
+                                (s) => s.txMsgNamed.name === 'send'
+                            )
+                            const stakeTx = results.find(
+                                (s) => s.txMsgNamed.name === 'stake'
+                            )
+                            const stakeTxData = !stakeTx
+                                ? 'Stake TX Pending'
+                                : stakeTx.result
+                            const sentTxData =
+                                results.length == 1
+                                    ? 'N/A'
+                                    : !sendTx
+                                    ? 'Send TX Pending'
+                                    : sendTx.result
 
-                                tableData.push([
-                                    node.node_alias,
-                                    node.address,
-                                    stakeTxData,
-                                    sentTxData,
-                                ])
+                            tableData.push([
+                                node.node_alias,
+                                node.address,
+                                stakeTxData,
+                                sentTxData,
+                            ])
 
-                                return (
-                                    <Tr key={i}>
-                                        <Td>{node.node_alias}</Td>
-                                        <Td>{node.address}</Td>
-                                        <Td>{stakeTxData}</Td>
-                                        <Td>{sentTxData}</Td>
-                                    </Tr>
-                                )
-                            })}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
-            </Box>
+                            return (
+                                <Tr key={i}>
+                                    <Td>{node.node_alias}</Td>
+                                    <Td>{node.address}</Td>
+                                    <Td>{stakeTxData}</Td>
+                                    <Td>{sentTxData}</Td>
+                                </Tr>
+                            )
+                        })}
+                    </Tbody>
+                </Table>
+            </TableContainer>
 
             <Flex width="100%" justify="flex-end">
                 <Button
