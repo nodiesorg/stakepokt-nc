@@ -1,6 +1,6 @@
+import { TableContainerStyle } from '@/styles/Table'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import {
-    Box,
     Button,
     ButtonGroup,
     Flex,
@@ -53,56 +53,26 @@ function ConfirmationStep({
                 }`}
             </Text>
 
-            <Box
-                margin="2rem 0"
-                height="300px"
-                overflowY="scroll"
-                sx={{
-                    '&::-webkit-scrollbar': {
-                        width: '7px',
-                        borderRadius: '5px',
-                        backgroundColor: '#202436',
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                        borderRadius: '5px',
-                        backgroundColor: '#B9B6D7',
-                    },
-                    '&::-webkit-scrollbar:horizontal': {
-                        display: 'none',
-                    },
-                }}
-            >
-                <TableContainer>
-                    <Table
-                        sx={{
-                            tableLayout: 'fixed',
-                            whiteSpace: 'normal',
-                            td: {
-                                wordWrap: 'break-word',
-                                wordBreak: 'break-all',
-                            },
-                        }}
-                        variant="simple"
-                    >
-                        <Thead>
-                            <Tr>
-                                <Th>Node Alias</Th>
-                                <Th>Node Address</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody color="white">
-                            {stakeForm.nodesToStake?.map((node) => {
-                                return (
-                                    <Tr key={node.node_alias}>
-                                        <Td>{node.node_alias}</Td>
-                                        <Td>{node.address}</Td>
-                                    </Tr>
-                                )
-                            })}
-                        </Tbody>
-                    </Table>
-                </TableContainer>
-            </Box>
+            <TableContainer sx={TableContainerStyle}>
+                <Table variant="simple">
+                    <Thead>
+                        <Tr>
+                            <Th>Node Alias</Th>
+                            <Th>Node Address</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody color="white">
+                        {stakeForm.nodesToStake?.map((node) => {
+                            return (
+                                <Tr key={node.node_alias}>
+                                    <Td>{node.node_alias}</Td>
+                                    <Td>{node.address}</Td>
+                                </Tr>
+                            )
+                        })}
+                    </Tbody>
+                </Table>
+            </TableContainer>
 
             <Flex width="100%" justify="flex-end">
                 <ButtonGroup>
