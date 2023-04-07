@@ -25,11 +25,7 @@ function ConfirmationStep({
     onNextStep,
     onPrevStep,
 }: ConfirmationStepProps) {
-    const {
-        stakeAmount,
-        transferAmount,
-        customOutputAddress,
-    } = stakeForm
+    const { stakeAmount, transferAmount, customOutputAddress } = stakeForm
 
     const finishStep = () => {
         onNextStep({
@@ -52,12 +48,31 @@ function ConfirmationStep({
             </Text>
             <Text color="white" margin="1rem 0">
                 {`Non Custodial Address: ${
-                    stakeForm.customOutputAddress || stakeForm.wallet?.getAddress()
+                    stakeForm.customOutputAddress ||
+                    stakeForm.wallet?.getAddress()
                 }`}
             </Text>
 
-            <Box margin="2rem 0" overflow="scroll" height="300px" overflowY="scroll">
-                <TableContainer >
+            <Box
+                margin="2rem 0"
+                height="300px"
+                overflowY="scroll"
+                sx={{
+                    '&::-webkit-scrollbar': {
+                        width: '7px',
+                        borderRadius: '5px',
+                        backgroundColor: '#202436',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        borderRadius: '5px',
+                        backgroundColor: '#B9B6D7',
+                    },
+                    '&::-webkit-scrollbar:horizontal': {
+                        display: 'none',
+                    },
+                }}
+            >
+                <TableContainer>
                     <Table
                         sx={{
                             tableLayout: 'fixed',
@@ -78,7 +93,7 @@ function ConfirmationStep({
                         <Tbody color="white">
                             {stakeForm.nodesToStake?.map((node) => {
                                 return (
-                                    <Tr key={node.node_alias} >
+                                    <Tr key={node.node_alias}>
                                         <Td>{node.node_alias}</Td>
                                         <Td>{node.address}</Td>
                                     </Tr>
@@ -109,7 +124,7 @@ function ConfirmationStep({
                         size="lg"
                         _hover={{ backgroundColor: '#5C58FF' }}
                     >
-                        Yes, I'm ready to stake
+                        {`Yes, I'm ready to stake`}
                     </Button>
                 </ButtonGroup>
             </Flex>
