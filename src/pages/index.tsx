@@ -33,6 +33,9 @@ const stepMetadata = [
         headerTitle: 'Set Stake Distribution',
     },
     {
+        headerTitle: 'Confirm Stake',
+    },
+    {
         headerTitle: 'Staking results',
     },
 ]
@@ -62,7 +65,6 @@ export default function Home() {
                 <link rel="icon" href="/favicon.png" />
             </Head>
 
-            {/* Nav */}
             <Box as="main" minHeight="100vh">
                 <Flex
                     backgroundColor="#1B1E30"
@@ -72,23 +74,30 @@ export default function Home() {
                     <HStack color="white" padding=".5rem 1rem" spacing={5}>
                         <Link
                             onClick={() => {
+                                // is on last step of form then reload the page to reset state(s)
                                 if (activeStep == stepMetadata.length - 1)
-                                    // is on last step of form then reload the page to reset state(s)
                                     window.location.reload()
                                 else setForm(Form.STAKE_NODES)
                             }}
                         >
                             Stake Nodes
                         </Link>
-                        <Link onClick={() => setForm(Form.GENERATE_NODES)}>
+                        <Link
+                            onClick={() => {
+                                // user was on an unknown state, so need to restart
+                                if (activeStep != 0) window.location.reload()
+                                else setForm(Form.GENERATE_NODES)
+                            }}
+                        >
                             Generate Nodes
                         </Link>
                     </HStack>
                 </Flex>
+
                 <Flex minHeight="100vh">
                     <Container
                         maxWidth={
-                            activeStep === stepMetadata.length - 1
+                            activeStep === stepMetadata.length - 1 || activeStep === 3
                                 ? '5xl'
                                 : '3xl'
                         }
