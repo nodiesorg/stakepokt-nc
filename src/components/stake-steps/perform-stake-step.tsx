@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-import { stringify } from 'csv-string';
 import { StakeForm } from '@/components/stake-steps/stake-form'
 import { getTransactionBuilder } from '@/internal/pokt-rpc/provider'
 import { ImportedNcNode } from '@/internal/pokt-types/imported-nc-node'
@@ -23,7 +21,9 @@ import {
     Thead,
     Tr,
 } from '@chakra-ui/react'
+import { stringify } from 'csv-string'
 import bigDecimal from 'js-big-decimal'
+import { useEffect, useState } from 'react'
 
 const DEFAULT_CHAINS = ['0001']
 const DEFAULT_DOMAIN = new URL('https://parked.com')
@@ -38,10 +38,10 @@ type StakeResult = {
 }
 
 function convertToCsv(data: any) {
-    const headers = data[0];
-    const rows = data.slice(1);
-    const csv = stringify([headers, ...rows]);
-    return csv;  
+    const headers = data[0]
+    const rows = data.slice(1)
+    const csv = stringify([headers, ...rows])
+    return csv
 }
 
 function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
@@ -105,14 +105,16 @@ function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
 
 function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
     const stakableNodes = generateStakableNodes(stakeForm)
-    const [csv, setCsv] = useState('');
+    const [csv, setCsv] = useState('')
     const [stakeResults, setStakeResults] = useState<StakeResult[]>(
         stakableNodes.map((s) => ({
             node: s.node,
             results: [],
         }))
     )
-    const tableData = [['Node Alias', 'Node Address', 'Stake TX Hash', 'Transfer TX Hash']]
+    const tableData = [
+        ['Node Alias', 'Node Address', 'Stake TX Hash', 'Transfer TX Hash'],
+    ]
 
     async function handleStake() {
         if (stakableNodes.length == 0) {
@@ -135,13 +137,31 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
     }, [])
 
     function handleExport() {
-        const csvData = convertToCsv(tableData);
-        setCsv(csvData);
+        const csvData = convertToCsv(tableData)
+        setCsv(csvData)
     }
 
     return (
         <Box>
-            <Box margin="2rem 0">
+            <Box
+                margin="2rem 0"
+                height="300px"
+                overflowY="scroll"
+                sx={{
+                    '&::-webkit-scrollbar': {
+                        width: '7px',
+                        borderRadius: '5px',
+                        backgroundColor: '#202436',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        borderRadius: '5px',
+                        backgroundColor: '#B9B6D7',
+                    },
+                    '&::-webkit-scrollbar:horizontal': {
+                        display: 'none',
+                    },
+                }}
+            >
                 <TableContainer>
                     <Table
                         sx={{
@@ -164,31 +184,47 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
                         </Thead>
                         <Tbody color="white">
                             {stakeResults.map((result, i) => {
-                                    const { node, results } = result;
-                                    const sendTx = results.find((s) => s.txMsgNamed.name === 'send')
-                                    const stakeTx = results.find((s) => s.txMsgNamed.name === 'stake')
-                                    const stakeTxData = !stakeTx ? 'Stake TX Pending' : stakeTx.result;
-                                    const sentTxData = results.length == 1 ? 'N/A' : !sendTx ? 'Send TX Pending' : sendTx.result
+                                const { node, results } = result
+                                const sendTx = results.find(
+                                    (s) => s.txMsgNamed.name === 'send'
+                                )
+                                const stakeTx = results.find(
+                                    (s) => s.txMsgNamed.name === 'stake'
+                                )
+                                const stakeTxData = !stakeTx
+                                    ? 'Stake TX Pending'
+                                    : stakeTx.result
+                                const sentTxData =
+                                    results.length == 1
+                                        ? 'N/A'
+                                        : !sendTx
+                                        ? 'Send TX Pending'
+                                        : sendTx.result
 
-                                    tableData.push([node.node_alias, node.address, stakeTxData, sentTxData])
+                                tableData.push([
+                                    node.node_alias,
+                                    node.address,
+                                    stakeTxData,
+                                    sentTxData,
+                                ])
 
-                                    return (
-                                        <Tr key={i}>
-                                            <Td>{node.node_alias}</Td>
-                                            <Td>{node.address}</Td>
-                                            <Td>{stakeTxData}</Td>
-                                            <Td>{sentTxData}</Td>
-                                        </Tr>
-                                    )
-                                }
-                            )}
+                                return (
+                                    <Tr key={i}>
+                                        <Td>{node.node_alias}</Td>
+                                        <Td>{node.address}</Td>
+                                        <Td>{stakeTxData}</Td>
+                                        <Td>{sentTxData}</Td>
+                                    </Tr>
+                                )
+                            })}
                         </Tbody>
                     </Table>
                 </TableContainer>
             </Box>
 
             <Flex width="100%" justify="flex-end">
-                <Button as="a"
+                <Button
+                    as="a"
                     border="1px solid white"
                     color="white"
                     leftIcon={<DownloadIcon />}
@@ -196,7 +232,10 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
                     onClick={handleExport}
                     size="lg"
                     variant="outline"
-                    href={`data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`} download="staking-results.csv"
+                    href={`data:text/csv;charset=utf-8,${encodeURIComponent(
+                        csv
+                    )}`}
+                    download="staking-results.csv"
                     _hover={{ backgroundColor: 'transparent' }}
                 >
                     Export
