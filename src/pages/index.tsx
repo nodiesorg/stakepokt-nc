@@ -1,10 +1,16 @@
 import { useState } from 'react'
 
 import {
+    Accordion,
+    AccordionButton,
+    AccordionIcon,
+    AccordionItem,
+    AccordionPanel,
     Box,
     Card,
     Container,
     Flex,
+    Heading,
     HStack,
     Image,
     Link,
@@ -16,11 +22,19 @@ import { useSteps } from 'chakra-ui-steps'
 
 import GenerateNodeForm from '@/components/forms/generate-node'
 import StakeNodeForm from '@/components/forms/stake-node'
+import fsPromises from 'fs/promises'
+import { GetStaticProps } from 'next'
+import path from 'path'
 
 enum Form {
     STAKE_NODES = 'STAKE_NODES',
     GENERATE_NODES = 'GENERATE_NODES',
 }
+
+type HowToUseProps = {
+    question: string
+    answer: string
+}[]
 
 const stepMetadata = [
     {
@@ -40,8 +54,8 @@ const stepMetadata = [
     },
 ]
 
-export default function Home() {
-    const [form, setForm] = useState<Form>(Form.STAKE_NODES)
+export default function Home({ data }: { data: HowToUseProps }) {
+    const [form, setForm] = useState<Form | undefined>(Form.STAKE_NODES)
     const {
         nextStep: goToNextStep,
         prevStep: goToPrevStep,
@@ -91,13 +105,17 @@ export default function Home() {
                         >
                             Generate Nodes
                         </Link>
+                        <Link onClick={() => setForm(undefined)}>
+                            How to use
+                        </Link>
                     </HStack>
                 </Flex>
 
                 <Flex minHeight="100vh">
                     <Container
                         maxWidth={
-                            activeStep === stepMetadata.length - 1 || activeStep === 3
+                            activeStep === stepMetadata.length - 1 ||
+                            activeStep === 3
                                 ? '5xl'
                                 : '3xl'
                         }
@@ -105,17 +123,58 @@ export default function Home() {
                         padding="2rem"
                     >
                         {/* Multistep card */}
-                        <Card backgroundColor="#1B1E30">
-                            {form === Form.STAKE_NODES ? (
-                                <StakeNodeForm
-                                    activeStep={activeStep}
-                                    goToNextStep={goToNextStep}
-                                    goToPrevStep={goToPrevStep}
-                                />
-                            ) : (
-                                <GenerateNodeForm />
-                            )}
-                        </Card>
+                        {form !== undefined ? (
+                            <Card backgroundColor="#1B1E30">
+                                {form === Form.STAKE_NODES ? (
+                                    <StakeNodeForm
+                                        activeStep={activeStep}
+                                        goToNextStep={goToNextStep}
+                                        goToPrevStep={goToPrevStep}
+                                    />
+                                ) : (
+                                    <GenerateNodeForm />
+                                )}
+                            </Card>
+                        ) : (
+                            <Box color="white" minH="600px">
+                                <Heading marginBottom={10} textAlign="center">
+                                    How to use?
+                                </Heading>
+                                <Accordion w="full" allowToggle>
+                                    {data.map(({ question, answer }, i) => (
+                                        <AccordionItem
+                                            key={i}
+                                            color="Gray1"
+                                            borderColor="#1b1e30"
+                                        >
+                                            <AccordionButton
+                                                _focus={{
+                                                    boxShadow:
+                                                        'none !important',
+                                                }}
+                                                fontSize="18px"
+                                                py={5}
+                                            >
+                                                <Box flex="1" textAlign="left">
+                                                    {question}
+                                                </Box>
+                                                <AccordionIcon
+                                                    color="#515676"
+                                                    fontSize="30px"
+                                                />
+                                            </AccordionButton>
+                                            <AccordionPanel
+                                                bg="DarkGray1"
+                                                color="Gray1"
+                                                p={10}
+                                            >
+                                                {answer}
+                                            </AccordionPanel>
+                                        </AccordionItem>
+                                    ))}
+                                </Accordion>
+                            </Box>
+                        )}
 
                         {/* Footer */}
                         <Box as="footer">
@@ -184,4 +243,16 @@ export default function Home() {
             </Box>
         </>
     )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+    const filePath = path.join(process.cwd(), 'src/data/guide.json')
+    const jsonData = await (await fsPromises.readFile(filePath)).toString()
+    const objectData = JSON.parse(jsonData)
+
+    return {
+        props: {
+            data: objectData,
+        },
+    }
 }
