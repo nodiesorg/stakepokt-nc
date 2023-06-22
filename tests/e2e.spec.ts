@@ -72,9 +72,9 @@ test('test', async ({ page }) => {
     await nextBtn.scrollIntoViewIfNeeded()
     await nextBtn.click()
 
-    expect(
-        await page.getByText('Wallet Balance: 1000000000.000000').count()
-    ).toBe(1)
+    // Wait for the balance to be fetched
+    const walletBalance = page.getByText('Wallet Balance: 1000000000.000000')
+    await walletBalance.waitFor({ state: 'visible' })
 
     // find by testid id additional-transfer-amount
     await page.getByTestId('additional-transfer-amount').fill('5')
@@ -91,19 +91,6 @@ test('test', async ({ page }) => {
     await page.route(
         'https://node1.testnet.pokt.network/v1/client/rawtx',
         async (route) => {
-            // if options request, return 200
-            if (route.request().method() === 'OPTIONS') {
-                await route.fulfill({
-                    status: 200,
-                    headers: {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-                        'Access-Control-Allow-Headers':
-                            'Origin, X-Requested-With, Content-Type, Accept',
-                    },
-                })
-                return
-            }
             // return a random txhash
             const json = {
                 logs: null,
@@ -120,13 +107,12 @@ test('test', async ({ page }) => {
 
     expect(await page.isVisible('text=Staking results')).toBeTruthy()
 
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const txHashLocs = generatedTxHashes.map((txHash) => page.getByText(txHash))
 
     // Verify that the generated transaction hashes are present on the page
-    for (const txHash of generatedTxHashes) {
-        // Expect the txHash to be visible on the page
-        expect(await page.isVisible(`text=${txHash}`)).toBeTruthy()
-    }
+    await Promise.all(
+        txHashLocs.map((loc) => loc.waitFor({ state: 'visible' }))
+    )
 
     // Intercept download event
     page.on('download', async (download) => {
@@ -154,6 +140,7 @@ test('test', async ({ page }) => {
             }
         }
     })
+    const downloadPromise = page.waitForEvent('download')
 
     // Click the Export link to start the download
     let exportBtn = page.getByRole('link', {
@@ -162,6 +149,6 @@ test('test', async ({ page }) => {
     await exportBtn.scrollIntoViewIfNeeded()
     await exportBtn.click()
 
-    // Optional: Add a delay to ensure the download handler has time to execute
-    await page.waitForTimeout(2000)
+    // Wait for the download to complete
+    await downloadPromise
 })
