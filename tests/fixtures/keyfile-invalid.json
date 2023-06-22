@@ -1,0 +1,7 @@
+{
+    "kdf": "never",
+    "salt": "gonna",
+    "secparam": "give",
+    "hint": "you",
+    "ciphertext": "up"
+}

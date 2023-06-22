@@ -1,1 +1,7 @@
-{"kdf":"scrypt","salt":"234cad041cf3d5adef8847c1a91da9fe","secparam":"12","hint":"pocket wallet","ciphertext":"6ggbU6F+zByCuRSn6+aR3kShMkh31tfUwNkteslzJqONzJdfnoHNMNoB0a5O1vB3rz28xAHXMIMXLjWD6dANPSql9vlnoRvxiZ4C1/C22gQDCPL9X5sL3gP2gVDmtfHJPIQdoR+Knh5wiZPBfAzbfhM7x59gJh5wvs9O1+WjOoheb0nnj7mRIENV4xg9iyV4"}
+{
+    "kdf": "scrypt",
+    "salt": "234cad041cf3d5adef8847c1a91da9fe",
+    "secparam": "12",
+    "hint": "pocket wallet",
+    "ciphertext": "6ggbU6F+zByCuRSn6+aR3kShMkh31tfUwNkteslzJqONzJdfnoHNMNoB0a5O1vB3rz28xAHXMIMXLjWD6dANPSql9vlnoRvxiZ4C1/C22gQDCPL9X5sL3gP2gVDmtfHJPIQdoR+Knh5wiZPBfAzbfhM7x59gJh5wvs9O1+WjOoheb0nnj7mRIENV4xg9iyV4"
+}
