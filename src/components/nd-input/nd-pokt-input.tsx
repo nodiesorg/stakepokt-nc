@@ -6,6 +6,7 @@ import NdInput from './nd-input'
 import invalid = Simulate.invalid
 
 type NDPoktDenomInputProps = {
+    testid?: string
     maxPoktValue?: bigDecimal
     minPoktValue?: bigDecimal
     defaultPoktValue: bigDecimal
@@ -17,6 +18,7 @@ type NDPoktDenomInputProps = {
 const POKT_REGEX = new RegExp(/^\d{0,9}(\.\d{0,6})?$/)
 
 const NDPoktDenomInput = ({
+    testid,
     children,
     onChange,
     defaultPoktValue,
@@ -64,6 +66,7 @@ const NDPoktDenomInput = ({
 
     return (
         <NdInput
+            data-testid={testid}
             onChange={handlePoktValueChange}
             value={poktValueString}
             errorMessage={invalidReason}

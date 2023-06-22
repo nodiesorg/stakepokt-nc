@@ -37,6 +37,7 @@ const NDDropzone = ({
         <>
             <Box
                 {...getRootProps()}
+                data-testid="dropzone"
                 backgroundColor="#363D63"
                 border="1px dashed"
                 borderColor={isError ? '#FC8181' : 'white'}
