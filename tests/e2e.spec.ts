@@ -34,8 +34,6 @@ const dragAndDropFile = async (
 }
 
 test('test', async ({ page }) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
     await page.goto('/')
     await page.getByRole('textbox').click()
     await page.getByRole('textbox').fill('P@assword1')
@@ -116,8 +114,9 @@ test('test', async ({ page }) => {
 
     // Intercept download event
     page.on('download', async (download) => {
-        // Wait for the download to complete
-        const downloadPath = await download.path()
+        // Save the downloaded file to a temporary location
+        const downloadPath = './tests/fixtures/transactions.csv'
+        await download.saveAs(downloadPath)
         if (downloadPath) {
             // Read the content of the downloaded file
             const content = fs.readFileSync(downloadPath, 'utf8')
