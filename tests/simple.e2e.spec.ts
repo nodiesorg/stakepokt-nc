@@ -1,37 +1,6 @@
-import { expect, Page, test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
 import fs from 'fs'
-
-const dragAndDropFile = async (
-    page: Page,
-    filePath: string,
-    fileName: string,
-    fileType: string,
-    selector: string
-) => {
-    // Read your file into a buffer.
-    const fileBuffer = await fs.promises.readFile(filePath)
-
-    // Create the DataTransfer and File
-    const dataTransfer = await page.evaluateHandle(
-        ({ data, fileName, fileType }) => {
-            const uint8Array = new Uint8Array(data)
-
-            // Debug log statement to print the string contents of the file
-            console.log('File contents:', String.fromCharCode(...uint8Array))
-
-            const dt = new DataTransfer()
-            const file = new File([uint8Array], fileName, { type: fileType })
-            dt.items.add(file)
-            return dt
-        },
-        { data: Array.from(fileBuffer), fileName, fileType }
-    )
-
-    // Now dispatch
-    await page.dispatchEvent(selector, 'drop', {
-        dataTransfer,
-    })
-}
+import { dragAndDropFile } from './test-helpers'
 
 test('test', async ({ page }) => {
     await page.goto('/')
