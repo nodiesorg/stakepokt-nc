@@ -4,6 +4,7 @@ import {
     importNodeKeys,
     importNonCustodialWallet,
     mockBalanceCheck,
+    withResponse,
 } from './test-helpers'
 
 test.describe('Balance check with POKT Provider', () => {
@@ -19,7 +20,10 @@ test.describe('Balance check with POKT Provider', () => {
                 await route.fulfill({ status: 500 })
             }
         )
-        await importNodeKeys(page)
+
+        await withResponse(page, '**/v1/query/balance', async () => {
+            await importNodeKeys(page)
+        })
 
         const walletBalance = page.getByText('Wallet Balance: FAILED')
         await walletBalance.waitFor({ state: 'visible' })

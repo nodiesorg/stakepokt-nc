@@ -117,3 +117,13 @@ export const verifyConfirmationStep = async (page: Page) => {
         .getByRole('button', { name: "Yes, I'm ready to stake" })
         .isVisible()
 }
+
+export const withResponse = async (
+    page: Page,
+    urlOrPredicate: string,
+    action: () => Promise<void>
+) => {
+    const response = page.waitForResponse(urlOrPredicate)
+    await action()
+    await response
+}

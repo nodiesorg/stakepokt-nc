@@ -10,13 +10,16 @@ import {
     mockBalanceCheck,
     mockTransaction,
     verifyConfirmationStep,
+    withResponse,
 } from './test-helpers'
 
 test.describe('Staking Transactions', () => {
     test.beforeEach(async ({ page }) => {
         await importNonCustodialWallet(page)
         await mockBalanceCheck(page, 1e15) // Assuming 1e15 is sufficient for staking
-        await importNodeKeys(page)
+        await withResponse(page, '**/v1/query/balance', async () => {
+            await importNodeKeys(page)
+        })
         await fillAdditionalTransferAmount(page, '5') // Assuming 5 is a valid amount
         await clickNextButton(page)
         await verifyConfirmationStep(page)
@@ -35,7 +38,9 @@ test.describe('Staking Transactions', () => {
         )
 
         // Attempt to stake
-        await clickButton(page, "Yes, I'm ready to stake")
+        await withResponse(page, '**/v1/client/rawtx', async () => {
+            await clickButton(page, "Yes, I'm ready to stake")
+        })
 
         // Assert that an error message is displayed
         expect(await page.locator('text={}').count()).toBeGreaterThan(0) // probably can do better than this for error message
@@ -47,7 +52,9 @@ test.describe('Staking Transactions', () => {
         await mockTransaction(page, 200, txs)
 
         // Attempt to stake
-        await clickButton(page, "Yes, I'm ready to stake")
+        await withResponse(page, '**/v1/client/rawtx', async () => {
+            await clickButton(page, "Yes, I'm ready to stake")
+        })
 
         // Assert that the staking was successful
         expect(await page.isVisible('text=Staking results')).toBeTruthy()

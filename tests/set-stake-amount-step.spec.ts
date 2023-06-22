@@ -6,6 +6,7 @@ import {
     importNodeKeys,
     importNonCustodialWallet,
     mockBalanceCheck,
+    withResponse,
 } from './test-helpers'
 
 test.describe('Staking with Insufficient and Sufficient Funds', () => {
@@ -16,7 +17,10 @@ test.describe('Staking with Insufficient and Sufficient Funds', () => {
     test('Insufficient Funds for stake amount', async ({ page }) => {
         // Mock the balance check with insufficient funds
         await mockBalanceCheck(page, 1) // Assuming 1 is insufficient for staking
-        await importNodeKeys(page)
+
+        await withResponse(page, '**/v1/query/balance', async () => {
+            await importNodeKeys(page)
+        })
 
         // Assert that an error message is displayed indicating insufficient funds
         let nextBtn = page.getByRole('button', {
@@ -29,7 +33,10 @@ test.describe('Staking with Insufficient and Sufficient Funds', () => {
     test('Sufficient Funds for stake amount', async ({ page }) => {
         // Mock the balance check with sufficient funds
         await mockBalanceCheck(page, 1e15) // Assuming 1e15 is sufficient for staking
-        await importNodeKeys(page)
+
+        await withResponse(page, '**/v1/query/balance', async () => {
+            await importNodeKeys(page)
+        })
 
         // Fill in additional transfer amount
         await fillAdditionalTransferAmount(page, '5') // Assuming 5 is a valid amount
