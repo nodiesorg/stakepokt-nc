@@ -70,13 +70,21 @@ function ImportNcWalletStep({ onNextStep }: ImportNcWalletStepProps) {
     const onKeyFileAdded = (e: File[]) => {
         const keyFile = e[0]
         const reader = new FileReader()
-        reader.onabort = () =>
-            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
-        reader.onerror = () =>
-            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
-        reader.onload = async () => {
+
+        reader.onload = () => {
+            console.log('File successfully read')
             setUploadFilePrompt(`Selected file: ${keyFile.name}`)
             setKeyString(reader.result as string)
+        }
+
+        reader.onabort = () => {
+            console.log('File reading was aborted')
+            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
+        }
+
+        reader.onerror = () => {
+            console.log('File reading has failed')
+            setUploadFilePrompt(`${filePrompt}, ${MALFORMED_KEYFILE_ERR}`)
         }
         reader.readAsText(keyFile)
     }

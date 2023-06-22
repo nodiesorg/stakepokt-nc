@@ -100,6 +100,7 @@ function generateStakableNodes(stakeForm: StakeForm): StakableNode[] {
                 outputAddress,
             }),
         })
+
         // Create a mapping to node -> stake/transfer tx
         return new StakableNode(tb, w, txMsgs)
     })
@@ -117,6 +118,8 @@ function PerformStakeStep({ stakeForm }: PerformStakeStepProps) {
     const tableData = [
         ['Node Alias', 'Node Address', 'Stake TX Hash', 'Transfer TX Hash'],
     ]
+
+    console.log('Staking nodes', stakableNodes)
 
     async function handleStake() {
         if (stakableNodes.length == 0) {
