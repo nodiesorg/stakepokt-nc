@@ -43,7 +43,8 @@ test.describe('Staking Transactions', () => {
         })
 
         // Assert that an error message is displayed
-        expect(await page.locator('text={}').count()).toBeGreaterThan(0) // probably can do better than this for error message
+        const errors = page.locator('text=Failed: ')
+        expect(await errors.count()).toBeGreaterThan(0) // probably can do better than this for error message
     })
 
     test('Stake with successful transaction', async ({ page }) => {

@@ -19,6 +19,7 @@ export const dragAndDropFile = async (
         },
         { data: Array.from(fileBuffer), fileName, fileType }
     )
+    await page.locator(selector).scrollIntoViewIfNeeded()
     await page.dispatchEvent(selector, 'drop', {
         dataTransfer,
     })

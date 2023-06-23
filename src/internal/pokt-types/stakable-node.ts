@@ -48,7 +48,10 @@ export class StakableNode {
                     txMsgNamed,
                     result: r.txHash,
                 }))
-                .catch((err) => ({ result: JSON.stringify(err), txMsgNamed }))
+                .catch((err) => ({
+                    result: `Failed: ${JSON.stringify(err)}`,
+                    txMsgNamed,
+                }))
         })
         const results = await Promise.allSettled(txs)
         return results.map(

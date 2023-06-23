@@ -25,6 +25,7 @@ test.describe('Importing CSV', () => {
         const error = page.getByText(
             'Selected file: nodes-invalid.csv, nodes detected: 2'
         )
+        await error.waitFor()
         expect(await error.isVisible()).toBeTruthy()
     })
 
