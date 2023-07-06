@@ -11,6 +11,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 interface NdInputProps extends InputProps {
     errorMessage?: string | null
+    testid?: string
 }
 
 function NdInput({ errorMessage = null, type, ...restProps }: NdInputProps) {

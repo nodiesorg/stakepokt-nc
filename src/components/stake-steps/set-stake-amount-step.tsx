@@ -191,6 +191,7 @@ function SetStakeAmountStep({
                     </Tooltip>
                 </HStack>
                 <NDPoktDenomInput
+                    testid="additional-transfer-amount"
                     defaultPoktValue={new bigDecimal('0')}
                     minPoktValue={new bigDecimal('0')}
                     onChange={handleTransferPoktChange}
@@ -211,6 +212,7 @@ function SetStakeAmountStep({
                     </Tooltip>
                 </HStack>
                 <Input
+                    id="non-custodial-address"
                     value={ncWalletAddress}
                     type="text"
                     onChange={changeNcWalletAddress}
