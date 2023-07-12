@@ -50,11 +50,11 @@ function ImportNodeKeysStep({
                 let domain: string | undefined
                 let chains: string[] | undefined
 
-                if (c.length == 4) {
+                if (c.length >= 4) {
                     domain = c[3].trim()
                 }
 
-                if (c.length == 5) {
+                if (c.length >= 5) {
                     chains = c[4].split(',').map((s) => s.trim())
                     if (chains.length == 0) return undefined
                 }
